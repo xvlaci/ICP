@@ -16,7 +16,8 @@ SOURCES += main.cpp \
            board.cpp \
            graphics/mainwindow.cpp \
     graphics/painter.cpp \
-    element.cpp
+    element.cpp \
+    game.cpp
 
 HEADERS  += board.h \
             element.h \
@@ -24,6 +25,7 @@ HEADERS  += board.h \
             sentry.h \
             object.h \
     graphics/painter.h \
-    graphics/mainwindow.h
+    graphics/mainwindow.h \
+    game.h
 
 FORMS    += mainwindow.ui

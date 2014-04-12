@@ -6,6 +6,8 @@
 #include <QtGui>
 #include <QGraphicsScene>
 
+#include "board.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -21,6 +23,7 @@ private:
 
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+    Board *board;
 
 };
 

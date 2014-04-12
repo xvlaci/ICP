@@ -3,15 +3,9 @@
 
 #include <QObject>
 #include <QPoint>
+#include <QGraphicsScene>
 
-#include "element.h"
-
-//class King;
-//class Queen;
-//class Bishop;
-//class Knight;
-//class Pawn;
-//class Rook;
+//#include "element.h"
 
 class Board : public QObject
 {
@@ -30,20 +24,14 @@ public:
       */
     virtual ~Board(void);
 
-    //bool isEmpty(QPoint target);
-    //void addPiece(APiece * piece);
-    //bool isMoveValid(QPoint source, QPoint target);
-    //void movePiece(QPoint source, QPoint target);
-    //APiece * getPiece(QPoint coordinates);
+    void paintBoard();
 
 private:
 
-    /**
-      *
-      */
-    Element * board[8][8];
+    int * neco[8][8];
+    //Element * board[8][8];
 
-//signals:
+signals:
 
 };
 
