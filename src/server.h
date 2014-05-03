@@ -1,68 +1,115 @@
-/* http://www.bogotobogo.com/cplusplus/Boost/boost_AsynchIO_asio_tcpip_socket_server_client_timer_bind_handler_multithreading_synchronizing_network_D.php */
-
-#ifndef SERVER_H
-#define SERVER_H
-
-#include <ctime>
+#include <cstdlib>
 #include <iostream>
-#include <string>
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 
 using boost::asio::ip::tcp;
 
-std::string make_daytime_string();
-
-class tcp_connection : public boost::enable_shared_from_this<tcp_connection>
+class session
 {
-
 public:
-  typedef boost::shared_ptr<tcp_connection> pointer;
-  static pointer create(boost::asio::io_service& io_service)
+  session(boost::asio::io_service& io_service)
+    : socket_(io_service)
   {
-    return pointer(new tcp_connection(io_service));
   }
+
   tcp::socket& socket()
   {
     return socket_;
   }
 
-  void start();
-
-private:
-  tcp_connection(boost::asio::io_service& io_service)
-    : socket_(io_service)
+  void start()
   {
+    socket_.async_read_some(boost::asio::buffer(data_, max_length),
+        boost::bind(&session::handle_read, this,
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred));
   }
 
-  void handle_write(const boost::system::error_code& /*error*/,size_t /*bytes_transferred*/);
+private:
+  void handle_read(const boost::system::error_code& error,
+      size_t bytes_transferred)
+  {
+    if (!error)
+    {
+      boost::asio::async_write(socket_,
+          boost::asio::buffer(data_, bytes_transferred),
+          boost::bind(&session::handle_write, this,
+            boost::asio::placeholders::error));
+    }
+    else
+    {
+      delete this;
+    }
+  }
+
+  void handle_write(const boost::system::error_code& error)
+  {
+    if (!error)
+    {
+      socket_.async_read_some(boost::asio::buffer(data_, max_length),
+          boost::bind(&session::handle_read, this,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+
+      //std::cout << data_ << std::endl;
+      std::string ahoj(data_);
+      std::cout << ahoj << std::endl;
+      if (ahoj == "aa")
+      {
+          std::cout << "hura" << std::endl;
+      }
+      else
+      {
+          std::cout << "neni to aa" << std::endl;
+      }
+
+    }
+    else
+    {
+      delete this;
+    }
+  }
 
   tcp::socket socket_;
-  std::string m_message;
-
+  enum { max_length = 1024 };
+  char data_[max_length];
 };
 
 class tcp_server
 {
 public:
-  tcp_server(boost::asio::io_service& io_service)
-    : acceptor_(io_service, tcp::endpoint(tcp::v4(), 2345))
+  tcp_server(boost::asio::io_service& io_service, short port)
+    : io_service_(io_service),
+      acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
   {
-    // start_accept() creates a socket and
-    // initiates an asynchronous accept operation
-    // to wait for a new connection.
     start_accept();
   }
 
 private:
+  void start_accept()
+  {
+    session* new_session = new session(io_service_);
+    acceptor_.async_accept(new_session->socket(),
+        boost::bind(&tcp_server::handle_accept, this, new_session,
+          boost::asio::placeholders::error));
+  }
 
-  void start_accept();
-  void handle_accept(tcp_connection::pointer new_connection, const boost::system::error_code& error);
+  void handle_accept(session* new_session,
+      const boost::system::error_code& error)
+  {
+    if (!error)
+    {
+      new_session->start();
+    }
+    else
+    {
+      delete new_session;
+    }
 
+    start_accept();
+  }
+
+  boost::asio::io_service& io_service_;
   tcp::acceptor acceptor_;
 };
-
-
-#endif // SERVER_H

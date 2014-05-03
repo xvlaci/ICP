@@ -2,6 +2,18 @@
 #define SERVERWINDOW_H
 
 #include <QWidget>
+#include <QThread>
+
+class ServerThread : public QThread
+{
+    Q_OBJECT
+
+public:
+    explicit ServerThread(QWidget *parent = 0);
+    void run();
+    QString name;
+
+};
 
 namespace Ui {
 class ServerWindow;
@@ -16,6 +28,9 @@ public:
     ~ServerWindow();
 
 private:
+    void closeEvent(QCloseEvent *close);
     Ui::ServerWindow *ui;
+    ServerThread *server_thread;
+};
 
-};endif // SERVERWINDOW_H
+#endif // SERVERWINDOW_H
