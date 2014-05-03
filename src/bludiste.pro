@@ -16,18 +16,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     server.cpp \
     client.cpp \
-    serverwindow.cpp \
-    clientwindow.cpp
+    character.cpp \
+    square.cpp \
+    board.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
     client.h \
-    serverwindow.h \
-    clientwindow.h
+    character.h \
+    square.h \
+    board.h
 
-FORMS    += mainwindow.ui \
-    serverwindow.ui \
-    clientwindow.ui
+FORMS    += mainwindow.ui
 
 LIBS    += -lboost_system \
            -pthread
