@@ -41,15 +41,18 @@ void session::handle_write(const boost::system::error_code &error)
                                           boost::asio::placeholders::bytes_transferred));
 
       //std::cout << data_ << std::endl;
+
+      /*
+       * tohle nefunguje protoze ten buffer se roztahuje a zustavaji v nem zpravy z minule */
+
       std::string ahoj(data_);
-      std::cout << ahoj << std::endl;
       if (ahoj == "aa")
       {
-          std::cout << "hura" << std::endl;
+          std::cout << "Server: hura" << std::endl;
       }
       else
       {
-          std::cout << "neni to aa" << std::endl;
+          std::cout << "Server: neni to aa" << std::endl;
       }
 
     }

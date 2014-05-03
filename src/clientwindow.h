@@ -1,6 +1,11 @@
 #ifndef CLIENTWINDOW_H
 #define CLIENTWINDOW_H
 
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <boost/asio.hpp>
+
 #include <QWidget>
 
 namespace Ui {
