@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include "serverwindow.h"
+#include "serverwindow.h"
 
 #include "server.h"
 
@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    server_thread = new ServerThread(this);
 }
 
 MainWindow::~MainWindow()
@@ -18,20 +17,17 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_StartServerButton_clicked()
 {
 
     //server_window = new ServerWindow(this);
-    server_thread->start();
-    ui->label->setText("server started");
+
+    //QWidget *wdg = new QWidget;
+    //wdg->show();
+    ServerWindow *window = new ServerWindow;
+    window->show();
 
     //server_window->show();
-}
-
-
-ServerThread::ServerThread(QObject *parent)
-{
-
 }
 
 void ServerThread::run()
@@ -43,7 +39,7 @@ void ServerThread::run()
 
       // The io_service object provides I/O services, such as sockets,
       // that the server object will use.
-      tcp_server server(io_service);
+      tcp_server server(io_service, 2345);
 
       // Run the io_service object to perform asynchronous operations.
       io_service.run();

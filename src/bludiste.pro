@@ -15,13 +15,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     server.cpp \
-    client.cpp
+    client.cpp \
+    serverwindow.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
-    client.h
+    client.h \
+    serverwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    serverwindow.ui
 
 LIBS    += -lboost_system \
            -pthread
