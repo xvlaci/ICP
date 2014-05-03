@@ -1,6 +1,8 @@
 #include "serverwindow.h"
 #include "ui_serverwindow.h"
 
+#include "server.h"
+
 ServerWindow::ServerWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ServerWindow),
