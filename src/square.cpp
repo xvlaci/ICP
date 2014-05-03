@@ -17,6 +17,10 @@ void Square::setCharacter(Character * character){
     this->character = character;
 }
 
+int Square::getObjectType(){
+    return this->object_type;
+}
+
 void Square::clearSquare(){
     this->character = 0;
     this->object_type = 0;

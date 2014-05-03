@@ -22,6 +22,7 @@ public:
     Square(int x, int y, int object_type);
     ~Square();
     Character * getCharacter();
+    int getObjectType();
     void setCharacter(Character * character);
     void clearSquare();
     int getX();

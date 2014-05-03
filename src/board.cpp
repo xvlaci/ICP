@@ -31,12 +31,16 @@ Board::Board(int width, int height, std::string map){
 }
 
 void Board::loadMap(){
+    const char *ch = this->map.c_str();
+
     for (int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
-            this->board[i][j] = new Square(i,j,0);
-            std::cout << board[i][j]->getX() << "x" << board[i][j]->getY();
+
+            this->board[i][j] = new Square(i,j,((int)*ch++) - '0');
+            std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
         }
     }
+
 
 }
 
