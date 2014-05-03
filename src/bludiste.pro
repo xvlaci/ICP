@@ -15,11 +15,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     server.cpp \
-    client.cpp
+    client.cpp \
+    character.cpp \
+    square.cpp \
+    board.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
-    client.h
+    client.h \
+    character.h \
+    square.h \
+    board.h
 
 FORMS    += mainwindow.ui
 
