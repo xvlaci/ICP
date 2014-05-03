@@ -27,7 +27,7 @@
      <string>StartServer</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="StartClientButton">
     <property name="geometry">
      <rect>
       <x>220</x>
