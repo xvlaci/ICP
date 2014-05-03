@@ -18,58 +18,14 @@ public:
     return socket_;
   }
 
-  void start()
-  {
-    socket_.async_read_some(boost::asio::buffer(data_, max_length),
-        boost::bind(&session::handle_read, this,
-          boost::asio::placeholders::error,
-          boost::asio::placeholders::bytes_transferred));
-  }
+  void start();
+  std::string GetData();
 
 private:
   void handle_read(const boost::system::error_code& error,
-      size_t bytes_transferred)
-  {
-    if (!error)
-    {
-      boost::asio::async_write(socket_,
-          boost::asio::buffer(data_, bytes_transferred),
-          boost::bind(&session::handle_write, this,
-            boost::asio::placeholders::error));
-    }
-    else
-    {
-      delete this;
-    }
-  }
+      size_t bytes_transferred);
 
-  void handle_write(const boost::system::error_code& error)
-  {
-    if (!error)
-    {
-      socket_.async_read_some(boost::asio::buffer(data_, max_length),
-          boost::bind(&session::handle_read, this,
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
-
-      //std::cout << data_ << std::endl;
-      std::string ahoj(data_);
-      std::cout << ahoj << std::endl;
-      if (ahoj == "aa")
-      {
-          std::cout << "hura" << std::endl;
-      }
-      else
-      {
-          std::cout << "neni to aa" << std::endl;
-      }
-
-    }
-    else
-    {
-      delete this;
-    }
-  }
+  void handle_write(const boost::system::error_code& error);
 
   tcp::socket socket_;
   enum { max_length = 1024 };
@@ -87,28 +43,10 @@ public:
   }
 
 private:
-  void start_accept()
-  {
-    session* new_session = new session(io_service_);
-    acceptor_.async_accept(new_session->socket(),
-        boost::bind(&tcp_server::handle_accept, this, new_session,
-          boost::asio::placeholders::error));
-  }
+  void start_accept();
 
   void handle_accept(session* new_session,
-      const boost::system::error_code& error)
-  {
-    if (!error)
-    {
-      new_session->start();
-    }
-    else
-    {
-      delete new_session;
-    }
-
-    start_accept();
-  }
+      const boost::system::error_code& error);
 
   boost::asio::io_service& io_service_;
   tcp::acceptor acceptor_;
