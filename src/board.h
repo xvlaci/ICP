@@ -6,14 +6,17 @@
 #include <string>
 #include "square.h"
 
+
+
 class Board{
 private:
     int width;
     int height;
     std::string map;
     Square *** board;
-
     void loadMap();
+    char symbols[7];
+
 public:
     Board(int width, int height, std::string map);
     ~Board();

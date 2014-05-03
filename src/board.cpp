@@ -1,12 +1,12 @@
 #include <cstdlib>
+#include <cstring>
 #include "board.h"
-
 
 Board::Board(int width, int height, std::string map){
     this->width = width;
     this->height = height;
     this->map = map;
-
+    strcpy(this->symbols, " #OqIF");
 
     if((this->board = ( Square*** )malloc( width*sizeof( Square** ))) == 0){
         std::cout << "shit";
@@ -31,12 +31,16 @@ Board::Board(int width, int height, std::string map){
 }
 
 void Board::loadMap(){
+    const char *ch = this->map.c_str();
+
     for (int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
-            this->board[i][j] = new Square(i,j,0);
-            std::cout << board[i][j]->getX() << "x" << board[i][j]->getY();
+
+            this->board[i][j] = new Square(i,j,((int)*ch++) - '0');
+            std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
         }
     }
+
 
 }
 
@@ -49,5 +53,10 @@ std::string Board::generateMsg(){
 }
 
 void Board::printMap(){
-    std::cout << "alb";
+    for(int i = 0; i < this->width; i++)
+    {
+        for(int j = 0; j < this->height; j++)
+            std::cout << symbols[board[i][j]->getObjectType()];
+        std::cout << std::endl;
+    }
 }

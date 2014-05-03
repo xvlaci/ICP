@@ -10,5 +10,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+    Board *b = new Board(4,4, "1111105113411121");
+
+    b->printMap();
+
     return a.exec();
 }
