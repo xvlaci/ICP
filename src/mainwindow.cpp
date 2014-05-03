@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "serverwindow.h"
+#include "clientwindow.h"
 
 #include "server.h"
 
@@ -19,16 +20,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_StartServerButton_clicked()
 {
-
-    //server_window = new ServerWindow(this);
-
-    //QWidget *wdg = new QWidget;
-    //wdg->show();
     ServerWindow *window = new ServerWindow;
     window->show();
-
-    //server_window->show();
 }
+
+void MainWindow::on_StartClientButton_clicked()
+{
+    ClientWindow *client_window = new ClientWindow;
+    client_window->show();
+
+}
+
 
 void ServerThread::run()
 {

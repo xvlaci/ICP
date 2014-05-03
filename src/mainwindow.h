@@ -17,6 +17,7 @@ public:
 
 private slots:
     void on_StartServerButton_clicked();
+    void on_StartClientButton_clicked();
 
 private:
     Ui::MainWindow *ui;
