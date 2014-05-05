@@ -3,8 +3,8 @@
 
 enum {
     UP = 0,
-    DOWN,
     LEFT,
+    DOWN,
     RIGHT
 };
 

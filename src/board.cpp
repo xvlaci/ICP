@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstring>
+#include <boost/lexical_cast.hpp>
 #include "board.h"
 
 Board::Board(int width, int height, std::string map){
@@ -37,7 +38,7 @@ void Board::loadMap(){
         for(int j = 0; j < height; j++){
 
             this->board[i][j] = new Square(i,j,((int)*ch++) - '0');
-            std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
+            //std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
         }
     }
 
@@ -45,11 +46,32 @@ void Board::loadMap(){
 }
 
 Square * Board::getSquare(int x, int y){
-    return 0;
+    return this->board[x][y];
 }
 
 std::string Board::generateMsg(){
-    return "bla";
+    std::string msg;
+    msg = boost::lexical_cast<std::string>(this->width) + " " \
+            + boost::lexical_cast<std::string>(this->height) + "\n";
+    Square * s;
+    for (int i = 0; i < width; i++){
+        for(int j = 0; j < height; j++){
+            s = this->board[i][j];
+            if(s->getObjectType() > 3){
+                //Guard pozice a, b, c, d ... Player pozice e, f, g, h
+                char sym = (s->getObjectType() - 4) * 4 + 'a' + s->getCharacter()->facing();
+                std::cout << s->getCharacter()->facing() << std::endl;
+                msg.push_back(sym);
+
+            }
+            else
+            {
+                msg.append(boost::lexical_cast<std::string>(s->getObjectType()));
+                //std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
+            }
+        }
+    }
+    return msg;
 }
 
 void Board::printMap(){

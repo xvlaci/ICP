@@ -14,5 +14,7 @@ int main(int argc, char *argv[])
 
     b->printMap();
 
+    std::cout << b->generateMsg();
+
     return a.exec();
 }

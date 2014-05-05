@@ -7,6 +7,9 @@ Square::Square(int x, int y, int object_type){
     if(object_type == GUARD){
         this->character = new Character(false, UP);
     }
+    if(object_type == PLAYER){
+        this->character = new Character(true, UP);
+    }
 }
 
 Character * Square::getCharacter(){
