@@ -23,7 +23,7 @@ bool Character::isPlayer(){
 }
 
 void Character::turn(int side){
-    this->direction = side;
+    this->direction = (side + 4) % 4;
 }
 
 int Character::facing(){

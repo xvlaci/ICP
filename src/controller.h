@@ -11,13 +11,14 @@ class Controller{
 private:
     string status;
     Board * b;
+    void newCoords(int & x, int & y, int facing);
 public:
     Controller();
     ~Controller();
     void setBoard(Board * b);
 
     Square * move(Square * s);
-    Square * moveGuard(Square * s);
+    void moveGuard();
     Square * turn(Square * s, int dir);
 
     Board * getBoard();

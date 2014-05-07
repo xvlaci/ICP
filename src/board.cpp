@@ -33,7 +33,7 @@ Board::Board(int width, int height, std::string map){
 
 void Board::loadMap(){
     int players = 0;
-
+    this->guards = 0;
     const char *ch = this->map.c_str();
 
     for (int i = 0; i < width; i++){
@@ -44,6 +44,10 @@ void Board::loadMap(){
             //std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
             if(((int)*ch - '0') == PLAYER ){
                 this->player_start_pos[players++] = this->board[i][j];
+            }
+
+            if(((int)*ch - '0') == GUARD ){
+                this->guards_pos[this->guards++] = this->board[i][j];
             }
 
             ch++;

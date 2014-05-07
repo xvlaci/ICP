@@ -6,6 +6,8 @@
 
 int main(int argc, char *argv[])
 {
+    srand(time(NULL));
+
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
@@ -16,9 +18,49 @@ int main(int argc, char *argv[])
     cont->setBoard(b);
 
     b->printMap();
+    cont->moveGuard();
+    //b->printMap();
 
-    cont->move(b->player_start_pos[0]);
+    b->player_start_pos[0] = cont->move(b->player_start_pos[0]);
     //std::cout << b->generateMsg();
     b->printMap();
+
+    cont->moveGuard();
+    b->player_start_pos[0] = cont->move(b->player_start_pos[0]);
+    b->printMap();
+    b->player_start_pos[0] = cont->move(b->player_start_pos[0]);
+    cont->moveGuard();
+    b->printMap();
+    b->player_start_pos[0] = cont->move(b->player_start_pos[0]);
+    cont->moveGuard();
+    b->printMap();
+    b->player_start_pos[0] = cont->move(b->player_start_pos[0]);
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    cont->moveGuard();
+    b->printMap();
+
+    //std::cout << abs(-2 % 4);
     return a.exec();
 }

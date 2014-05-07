@@ -25,6 +25,8 @@ public:
     void printMap();
 
     Square * player_start_pos[4];
+    Square * guards_pos[8];
+    int guards;
 
 };
 

@@ -1,5 +1,7 @@
 #include "controller.h"
 #include "board.h"
+#include <ctime> // Needed for the true randomization
+#include <cstdlib>
 
 
 
@@ -13,20 +15,7 @@ Square * Controller::move(Square * s){
     int x = s->getX();
     int y = s->getY();
 
-    switch(s->getCharacter()->facing()){
-        case UP:
-            y++;
-            break;
-        case RIGHT:
-            x++;
-            break;
-        case DOWN:
-            y--;
-            break;
-        case LEFT:
-            x--;
-            break;
-    }
+    this->newCoords(x, y, s->getCharacter()->facing());
 
     Square * new_s = this->b->getSquare(x,y);
 
@@ -43,6 +32,82 @@ Square * Controller::move(Square * s){
     }
     else{
         return s;
+    }
+}
+
+void Controller::newCoords(int & x, int & y, int facing){
+    switch(facing){
+        case UP:
+            y++;
+            break;
+        case RIGHT:
+            x++;
+            break;
+        case DOWN:
+            y--;
+            break;
+        case LEFT:
+            x--;
+            break;
+    }
+}
+
+void Controller::moveGuard(){
+    int rn;
+    int x, y;
+    Square * guard;
+    for(int i = 0; i < this->b->guards; i++){
+
+        guard = this->b->guards_pos[i];
+        x = guard->getX();
+        y = guard->getY();
+        int tries = 5;
+
+        while(tries > 0){
+            rn = rand() % 100 + 1;
+            int new_x = x;
+            int new_y = y;
+
+            if(rn <= 70){
+                //= Kupredu
+                std::cout << std::endl <<"dopredu - " << guard->getCharacter()->facing();
+                newCoords(new_x, new_y, guard->getCharacter()->facing());
+                Square * new_s = this->b->getSquare(new_x, new_y);
+
+                if(new_s->getObjectType() == EMPTY || \
+                   new_s->getObjectType() == PLAYER){
+                    tries = 0;
+                    new_s->setCharacter(guard->getCharacter());
+                    new_s->setObjectType(GUARD);
+                    this->b->guards_pos[i]->clearSquare();
+                    this->b->guards_pos[i] = new_s;
+                    std::cout << " - povedlo" << std::endl;
+                }
+                std::cout << std::endl;
+
+            }
+            else if(rn < 80){
+                //= Otoceni proti hodinovym rucickam
+                guard->getCharacter()->turn(guard->getCharacter()->facing()-1);
+                tries = 0;
+                std::cout << "Otoceni doprava - povedlo" << std::endl;
+            }
+            else if(rn < 90){
+                //= Otoceni po smeru hodinovych rucicek
+                guard->getCharacter()->turn(guard->getCharacter()->facing()+1);
+                tries = 0;
+                std::cout << "Otoceni doleva - povedlo" << std::endl;
+
+            }
+            else{
+                //= Otoceni o 180 stupnu
+                guard->getCharacter()->turn(guard->getCharacter()->facing()-2);
+                tries = 0;
+                std::cout << "Otoceni - povedlo" << std::endl;
+
+            }
+        }
+
     }
 }
 
