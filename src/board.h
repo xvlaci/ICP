@@ -16,7 +16,6 @@ private:
     Square *** board;
     void loadMap();
     char symbols[7];
-
 public:
     Board(int width, int height, std::string map);
     ~Board();
@@ -24,6 +23,9 @@ public:
     Square * getSquare(int x, int y);
     std::string generateMsg();
     void printMap();
+
+    Square * player_start_pos[4];
+
 };
 
 #endif // BOARD_H

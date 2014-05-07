@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     square.cpp \
     board.cpp \
     serverwindow.cpp \
-    clientwindow.cpp
+    clientwindow.cpp \
+    controller.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h \
     square.h \
     board.h\
     serverwindow.h \
-    clientwindow.h
+    clientwindow.h \
+    controller.h
 
 FORMS    += mainwindow.ui\
     serverwindow.ui \

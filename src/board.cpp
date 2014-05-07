@@ -32,13 +32,21 @@ Board::Board(int width, int height, std::string map){
 }
 
 void Board::loadMap(){
+    int players = 0;
+
     const char *ch = this->map.c_str();
 
     for (int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
 
-            this->board[i][j] = new Square(i,j,((int)*ch++) - '0');
+
+            this->board[i][j] = new Square(i,j,((int)*ch) - '0');
             //std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
+            if(((int)*ch - '0') == PLAYER ){
+                this->player_start_pos[players++] = this->board[i][j];
+            }
+
+            ch++;
         }
     }
 
@@ -60,7 +68,6 @@ std::string Board::generateMsg(){
             if(s->getObjectType() > 3){
                 //Guard pozice a, b, c, d ... Player pozice e, f, g, h
                 char sym = (s->getObjectType() - 4) * 4 + 'a' + s->getCharacter()->facing();
-                std::cout << s->getCharacter()->facing() << std::endl;
                 msg.push_back(sym);
 
             }

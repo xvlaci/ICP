@@ -24,9 +24,13 @@ int Square::getObjectType(){
     return this->object_type;
 }
 
+void Square::setObjectType(int type){
+    this->object_type = type;
+}
+
 void Square::clearSquare(){
     this->character = 0;
-    this->object_type = 0;
+    this->object_type = EMPTY;
 }
 
 int Square::getX(){

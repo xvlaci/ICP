@@ -23,6 +23,7 @@ public:
     ~Square();
     Character * getCharacter();
     int getObjectType();
+    void setObjectType(int type);
     void setCharacter(Character * character);
     void clearSquare();
     int getX();
