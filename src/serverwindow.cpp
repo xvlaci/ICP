@@ -17,7 +17,6 @@ ServerWindow::ServerWindow(QWidget *parent) :
 
 ServerWindow::~ServerWindow()
 {
-    //server_thread->terminate();
     delete ui;
 }
 
@@ -36,14 +35,8 @@ void ServerThread::run()
 {
     try
     {
-      // We need to create a server object to accept incoming client connections.
       boost::asio::io_service io_service;
-
-      // The io_service object provides I/O services, such as sockets,
-      // that the server object will use.
-      tcp_server server(io_service, 2345);
-
-      // Run the io_service object to perform asynchronous operations.
+      tcp_server server(io_service);
       io_service.run();
     }
     catch (std::exception& e)

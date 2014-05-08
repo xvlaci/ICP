@@ -8,6 +8,8 @@
 
 #include <QWidget>
 
+#include "client.h"
+
 namespace Ui {
 class ClientWindow;
 }
@@ -22,6 +24,8 @@ public:
 
 private:
     Ui::ClientWindow *ui;
+    client *my_client;
+
 
 private slots:
     void returnPressed();

@@ -3,8 +3,6 @@
 #include "serverwindow.h"
 #include "clientwindow.h"
 
-#include "server.h"
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
