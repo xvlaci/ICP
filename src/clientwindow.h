@@ -25,6 +25,7 @@ public:
 private:
     Ui::ClientWindow *ui;
     client *my_client;
+    boost::asio::io_service io_service;
 
 
 private slots:

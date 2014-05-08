@@ -28,6 +28,8 @@ public:
       return socket_;
     }
 
+    void send(std::string s);
+
 private:
     boost::asio::io_service& io_service_;
     tcp::resolver resolver_;
