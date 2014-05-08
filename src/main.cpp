@@ -1,42 +1,71 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-#include <boost/asio.hpp>
 #include <iostream>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/thread.hpp>
+#include <pthread.h>
+#include <time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "controller.h"
 
-boost::asio::io_service io;
+using std::cout;
+using std::endl;
+
+Controller * cont;
+Board * b;
 
 
-void move(Controller *cont, Board * b){
+void move(){
     cont->moveGuard();
     b->printMap();
+
+}
+
+void *PrintHello(void *threadid)
+{
+    while(true){
+        sleep(1);
+        move();
+
+    }
+   pthread_exit(NULL);
 }
 
 int main(int argc, char *argv[])
 {
+    using namespace boost;
+
     srand(time(NULL));
 
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    Controller *cont = new Controller();
+    cont = new Controller();
 
     maze_map maze = cont->load("zkusebni_mapa");
 
 
-    Board * b = new Board(maze.width,maze.height, maze.maze);
+    b = new Board(maze.width,maze.height, maze.maze);
     cont->setBoard(b);
 
-    boost::asio::io_service io;
+    pthread_t thread;
+    int i;
+    int rc = pthread_create(&thread, NULL, PrintHello, (void*) i);
 
-    boost::asio::deadline_timer t(io, boost::posix_time::seconds(1));
+    if (rc){
+        cout << "Error:unable to create thread," << rc << endl;
+        exit(-1);
+    }
 
-    t.async_wait(boost::bind(move, cont, b));
-    io.run();
+    //pthread_exit(NULL);
+
+
+
+
+
     /*
     b->printMap();
     cont->moveGuard();
