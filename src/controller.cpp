@@ -2,6 +2,9 @@
 #include "board.h"
 #include <ctime> // Needed for the true randomization
 #include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 
 
@@ -172,4 +175,26 @@ Board * Controller::getBoard(){
 
 void Controller::setBoard(Board * b){
     this->b = b;
+}
+
+
+
+maze_map Controller::load(string filename){
+    ifstream f;
+    f.open(filename.c_str());
+    string line;
+    string maze;
+    string width;
+    string height;
+    if (f.is_open()) {
+        getline(f,width);
+        getline(f,height);
+        while(getline(f,line))
+            maze.append(line);
+    }
+    f.close();
+
+    maze_map tmp_maze_map = { atoi(width.c_str()), atoi(height.c_str()), maze};
+
+    return tmp_maze_map;
 }

@@ -7,6 +7,12 @@
 
 using namespace std;
 
+struct maze_map{
+    int width;
+    int height;
+    string maze;
+};
+
 class Controller{
 private:
     string status;
@@ -25,6 +31,8 @@ public:
 
     Board * getBoard();
     string getStatusMessage();
+
+    maze_map load(string filename);
 };
 
 #endif // CONTROLLER_H

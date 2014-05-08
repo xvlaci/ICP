@@ -12,9 +12,11 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Controller *cont = new Controller();
-    std::string maze =
-            "111111111111111111111111000000000c00000003000110000000000000000000002100000001111110000000011000a0001111110000000e1100000001111110000f000110000000b000000000000011000000000000000000000111111111111111111111111";
-    Board * b = new Board(23,9, maze);
+
+    maze_map maze = cont->load("zkusebni_mapa");
+
+
+    Board * b = new Board(maze.width,maze.height, maze.maze);
     cont->setBoard(b);
     b->printMap();
     cont->moveGuard();
