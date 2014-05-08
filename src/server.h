@@ -8,12 +8,7 @@
 
 using boost::asio::ip::tcp;
 
-std::string make_daytime_string()
-{
-  using namespace std; // For time_t, time and ctime;
-  time_t now = time(0);
-  return ctime(&now);
-}
+std::string make_daytime_string();
 
 class tcp_connection
   : public boost::enable_shared_from_this<tcp_connection>
@@ -33,7 +28,12 @@ public:
 
   void start()
   {
-    message_ = make_daytime_string();
+    message_ = "ahoj";
+
+    socket_.async_read_some(boost::asio::buffer(data_, max_length),
+                           boost::bind(&tcp_connection::handle_read, this,
+                                       boost::asio::placeholders::error,
+                                       boost::asio::placeholders::bytes_transferred));
 
     boost::asio::async_write(socket_, boost::asio::buffer(message_),
         boost::bind(&tcp_connection::handle_write, shared_from_this(),
@@ -47,13 +47,14 @@ private:
   {
   }
 
-  void handle_write(const boost::system::error_code& /*error*/,
-      size_t /*bytes_transferred*/)
-  {
-  }
+
+  void handle_write(const boost::system::error_code& error,size_t bytes_transferred);
+  void handle_read(const boost::system::error_code &error, size_t bytes_transferred);
 
   tcp::socket socket_;
   std::string message_;
+  enum { max_length = 1024 };
+  char data_[max_length];
 };
 
 class tcp_server

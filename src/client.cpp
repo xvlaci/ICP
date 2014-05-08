@@ -9,7 +9,31 @@ void client::client_connect()
 
 void client::client_init()
 {
+    using boost::asio::ip::tcp;
 
+    try
+      {
+
+        std::string message("new");
+        this->client_connect();
+        using namespace std;
+
+        boost::asio::write(this->socket(), boost::asio::buffer(message, message.size()));
+
+        char reply[1024];
+        size_t reply_length = boost::asio::read(this->socket(),
+            boost::asio::buffer(reply, message.size()));
+        //std::cout << "Reply is: ";
+        std::cout.write(reply, reply_length);
+        std::cout << std::endl;
+
+
+
+      }
+      catch (std::exception& e)
+      {
+        std::cerr << "Exception: " << e.what() << "\n";
+      }
 }
 
 void client::send(std::string s){
@@ -17,13 +41,15 @@ void client::send(std::string s){
 
     try
       {
-        this->client_connect();
-        using namespace std; // For strlen.
-        //size_t request_length = strlen(request);
-        //if(my_client == NULL){
-            //std::cout << this << std::endl;
 
-        boost::asio::write(this->socket(), boost::asio::buffer(s, s.size()));
+        std::string message;
+        message += client_id;
+        message += s;
+
+        this->client_connect();
+        using namespace std;
+
+        boost::asio::write(this->socket(), boost::asio::buffer(message, message.size()));
 
         char reply[1024];
         size_t reply_length = boost::asio::read(this->socket(),
