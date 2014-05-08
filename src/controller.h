@@ -20,6 +20,8 @@ public:
     Square * move(Square * s);
     void moveGuard();
     Square * turn(Square * s, int dir);
+    Square * pickUpKey(Square * s);
+    Square * openGate(Square * s);
 
     Board * getBoard();
     string getStatusMessage();

@@ -7,7 +7,7 @@ Board::Board(int width, int height, std::string map){
     this->width = width;
     this->height = height;
     this->map = map;
-    strcpy(this->symbols, " #OqIF");
+    strcpy(this->symbols, " #Oq^A>DvU<C");
 
     if((this->board = ( Square*** )malloc( width*sizeof( Square** ))) == 0){
         std::cout << "shit";
@@ -35,19 +35,18 @@ void Board::loadMap(){
     int players = 0;
     this->guards = 0;
     const char *ch = this->map.c_str();
+    for (int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
 
-    for (int i = 0; i < width; i++){
-        for(int j = 0; j < height; j++){
 
-
-            this->board[i][j] = new Square(i,j,((int)*ch) - '0');
+            this->board[x][y] = new Square(x,y,((int)*ch) - '0');
             //std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
-            if(((int)*ch - '0') == PLAYER ){
-                this->player_start_pos[players++] = this->board[i][j];
+            if((int)*ch >= 'e' && (int)*ch <= 'h'){
+                this->player_start_pos[players++] = this->board[x][y];
             }
 
-            if(((int)*ch - '0') == GUARD ){
-                this->guards_pos[this->guards++] = this->board[i][j];
+            if((int)*ch >= 'a' && (int)*ch <= 'd'){
+                this->guards_pos[this->guards++] = this->board[x][y];
             }
 
             ch++;
@@ -66,10 +65,10 @@ std::string Board::generateMsg(){
     msg = boost::lexical_cast<std::string>(this->width) + " " \
             + boost::lexical_cast<std::string>(this->height) + "\n";
     Square * s;
-    for (int i = 0; i < width; i++){
-        for(int j = 0; j < height; j++){
-            s = this->board[i][j];
-            if(s->getObjectType() > 3){
+    for (int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            s = this->board[x][y];
+            if(s->getObjectType() >= GUARD){
                 //Guard pozice a, b, c, d ... Player pozice e, f, g, h
                 char sym = (s->getObjectType() - 4) * 4 + 'a' + s->getCharacter()->facing();
                 msg.push_back(sym);
@@ -86,10 +85,18 @@ std::string Board::generateMsg(){
 }
 
 void Board::printMap(){
-    for(int i = 0; i < this->width; i++)
+    for(int y = 0; y < this->height; y++)
     {
-        for(int j = 0; j < this->height; j++)
-            std::cout << symbols[board[i][j]->getObjectType()];
+        for(int x = 0; x < this->width; x++){
+            if(board[x][y]->getObjectType() >= GUARD){
+                std::cout << symbols[board[x][y]->getObjectType() + (2*board[x][y]->getCharacter()->facing())];
+            }
+            else{
+                std::cout << symbols[board[x][y]->getObjectType()];
+            }
+        }
         std::cout << std::endl;
+
+
     }
 }

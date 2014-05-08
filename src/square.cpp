@@ -4,12 +4,18 @@ Square::Square(int x, int y, int object_type){
     this->x = x;
     this->y = y;
     this->object_type = object_type;
-    if(object_type == GUARD){
-        this->character = new Character(false, UP);
+    object_type += '0';
+
+    if(object_type >= 'e' && object_type <= 'h'){
+        this->object_type = PLAYER;
+        this->character = new Character(true, object_type - 'e');
     }
-    if(object_type == PLAYER){
-        this->character = new Character(true, UP);
+
+    if(object_type >= 'a' && object_type <= 'd'){
+        this->object_type = GUARD;
+        this->character = new Character(false, object_type - 'a');
     }
+
 }
 
 Character * Square::getCharacter(){

@@ -15,7 +15,7 @@ private:
     std::string map;
     Square *** board;
     void loadMap();
-    char symbols[7];
+    char symbols[13];
 public:
     Board(int width, int height, std::string map);
     ~Board();

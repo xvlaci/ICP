@@ -18,6 +18,8 @@ Square * Controller::move(Square * s){
     this->newCoords(x, y, s->getCharacter()->facing());
 
     Square * new_s = this->b->getSquare(x,y);
+    //std::cout << new_s->getX() << " x " << new_s->getY() << std::endl;
+    //std::cout << new_s->getObjectType() << std::endl;
 
     if(new_s->getObjectType() == EMPTY){
         new_s->setCharacter(s->getCharacter());
@@ -38,18 +40,60 @@ Square * Controller::move(Square * s){
 void Controller::newCoords(int & x, int & y, int facing){
     switch(facing){
         case UP:
-            y++;
+            y--;
             break;
         case RIGHT:
             x++;
             break;
         case DOWN:
-            y--;
+            y++;
             break;
         case LEFT:
             x--;
             break;
     }
+}
+
+Square * Controller::pickUpKey(Square * s){
+    if(s->getObjectType() != PLAYER)
+        return 0;
+
+    int x = s->getX();
+    int y = s->getY();
+
+    this->newCoords(x, y, s->getCharacter()->facing());
+
+    Square * new_s = this->b->getSquare(x,y);
+
+    if(new_s->getObjectType() == KEY){
+        new_s->clearSquare();
+        s->getCharacter()->pickUpKey();
+        return s;
+
+        // nejaka zprava
+    }
+    return s;
+}
+
+Square * Controller::openGate(Square * s){
+    if(s->getObjectType() != PLAYER)
+        return 0;
+
+    int x = s->getX();
+    int y = s->getY();
+
+    this->newCoords(x, y, s->getCharacter()->facing());
+
+    Square * new_s = this->b->getSquare(x,y);
+
+    if(new_s->getObjectType() == GATE && s->getCharacter()->hasKey()){
+        new_s->clearSquare();
+        s->getCharacter()->useKey();
+        return s;
+
+        // nejaka zprava
+    }
+    return s;
 }
 
 void Controller::moveGuard(){
@@ -70,7 +114,7 @@ void Controller::moveGuard(){
 
             if(rn <= 70){
                 //= Kupredu
-                std::cout << std::endl <<"dopredu - " << guard->getCharacter()->facing();
+                //std::cout << std::endl <<"dopredu - " << guard->getCharacter()->facing();
                 newCoords(new_x, new_y, guard->getCharacter()->facing());
                 Square * new_s = this->b->getSquare(new_x, new_y);
 
@@ -81,29 +125,29 @@ void Controller::moveGuard(){
                     new_s->setObjectType(GUARD);
                     this->b->guards_pos[i]->clearSquare();
                     this->b->guards_pos[i] = new_s;
-                    std::cout << " - povedlo" << std::endl;
+                    //std::cout << " - povedlo" << std::endl;
                 }
-                std::cout << std::endl;
+                //std::cout << std::endl;
 
             }
             else if(rn < 80){
                 //= Otoceni proti hodinovym rucickam
                 guard->getCharacter()->turn(guard->getCharacter()->facing()-1);
                 tries = 0;
-                std::cout << "Otoceni doprava - povedlo" << std::endl;
+                //std::cout << "Otoceni doprava - povedlo" << std::endl;
             }
             else if(rn < 90){
                 //= Otoceni po smeru hodinovych rucicek
                 guard->getCharacter()->turn(guard->getCharacter()->facing()+1);
                 tries = 0;
-                std::cout << "Otoceni doleva - povedlo" << std::endl;
+                //std::cout << "Otoceni doleva - povedlo" << std::endl;
 
             }
             else{
                 //= Otoceni o 180 stupnu
                 guard->getCharacter()->turn(guard->getCharacter()->facing()-2);
                 tries = 0;
-                std::cout << "Otoceni - povedlo" << std::endl;
+                //std::cout << "Otoceni - povedlo" << std::endl;
 
             }
         }
