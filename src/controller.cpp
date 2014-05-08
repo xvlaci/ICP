@@ -3,8 +3,8 @@
 #include <ctime> // Needed for the true randomization
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <fstream>
-#include <string>
 
 
 
@@ -197,4 +197,37 @@ maze_map Controller::load(string filename){
     maze_map tmp_maze_map = { atoi(width.c_str()), atoi(height.c_str()), maze};
 
     return tmp_maze_map;
+}
+
+void Controller::save(string filename){
+
+    using namespace std;
+   /*
+    string msg = b->generateMsg();
+    stringstream ss(msg.c_str());
+    string wandh;
+    std::getline(ss, msg);
+    wandh.append(msg);
+    wandh.append("\n");
+    std::getline(ss, msg);
+    wandh.append(msg);
+    wandh.append("\n");
+    std::getline(ss, msg);
+
+
+    for(int i = 1; i <= b->getHeight(); i++){
+        msg.insert(b->getWidth()*i, "\n");
+    }
+
+    wandh.append(msg);
+    */
+
+    ofstream f;
+    string msg = b->generateMsg();
+    f.open(filename.c_str());
+    if (f.is_open()) {
+        f << msg;
+
+    }
+    f.close();
 }

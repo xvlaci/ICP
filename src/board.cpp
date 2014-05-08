@@ -62,7 +62,7 @@ Square * Board::getSquare(int x, int y){
 
 std::string Board::generateMsg(){
     std::string msg;
-    msg = boost::lexical_cast<std::string>(this->width) + " " \
+    msg = boost::lexical_cast<std::string>(this->width) + "\n" \
             + boost::lexical_cast<std::string>(this->height) + "\n";
     Square * s;
     for (int y = 0; y < height; y++){
@@ -99,4 +99,12 @@ void Board::printMap(){
 
 
     }
+}
+
+int Board::getWidth(){
+    return this->width;
+}
+
+int Board::getHeight(){
+    return this->height;
 }

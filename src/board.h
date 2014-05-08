@@ -19,6 +19,8 @@ private:
 public:
     Board(int width, int height, std::string map);
     ~Board();
+    int getWidth();
+    int getHeight();
 
     Square * getSquare(int x, int y);
     std::string generateMsg();

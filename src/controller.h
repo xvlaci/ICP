@@ -33,6 +33,7 @@ public:
     string getStatusMessage();
 
     maze_map load(string filename);
+    void save(string filename);
 };
 
 #endif // CONTROLLER_H

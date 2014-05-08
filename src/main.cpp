@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     b->printMap();
     cont->moveGuard();
     b->printMap();
+    cont->save("bla.txt");
+
 
 
     /*b->player_start_pos[0] = cont->move(b->player_start_pos[0]);
