@@ -36,7 +36,7 @@ private:
     tcp::resolver::query query_;
     tcp::resolver::iterator iterator_;
     tcp::socket socket_;
-    int client_id;
+    char client_id;
     void client_init();
 };
 

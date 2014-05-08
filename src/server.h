@@ -28,12 +28,22 @@ public:
 
   void start()
   {
-    message_ = "ahoj";
+
 
     socket_.async_read_some(boost::asio::buffer(data_, max_length),
                            boost::bind(&tcp_connection::handle_read, this,
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred));
+
+    std::string translate(data_);
+    if (translate == "new")
+    {
+        message_ = 1;
+    }
+    else
+    {
+        message_ = std::string(data_);
+    }
 
     boost::asio::async_write(socket_, boost::asio::buffer(message_),
         boost::bind(&tcp_connection::handle_write, shared_from_this(),
