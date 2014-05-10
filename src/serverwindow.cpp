@@ -35,9 +35,13 @@ void ServerThread::run()
 {
     try
     {
-      boost::asio::io_service io_service;
-      tcp_server server(io_service);
-      io_service.run();
+        boost::asio::io_service io_service;
+
+        tcp::endpoint listen_endpoint(tcp::v4(), 2345);
+
+        server s(io_service, listen_endpoint);
+
+        io_service.run();
     }
     catch (std::exception& e)
     {

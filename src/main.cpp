@@ -20,7 +20,7 @@ Board * b;
 
 void move(){
     cont->moveGuard();
-    b->printMap();
+    //b->printMap();
 
 }
 
