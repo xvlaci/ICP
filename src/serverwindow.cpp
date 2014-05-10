@@ -39,7 +39,9 @@ void ServerThread::run()
 
         tcp::endpoint listen_endpoint(tcp::v4(), 2345);
 
-        server s(io_service, listen_endpoint);
+        server::Instance(io_service, listen_endpoint);
+
+        //server s(io_service, listen_endpoint);
 
         io_service.run();
     }

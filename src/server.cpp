@@ -1,10 +1,9 @@
 #include "server.h"
 
-
-
 void channel::join(subscriber_ptr subscriber)
 {
   subscribers_.insert(subscriber);
+  server::getInstance()->cntPlus();
 }
 
 void channel::leave(subscriber_ptr subscriber)
@@ -16,6 +15,8 @@ void channel::deliver(const std::string& msg)
 {
   std::for_each(subscribers_.begin(), subscribers_.end(),
       boost::bind(&subscriber::deliver, _1, boost::ref(msg)));
+
+   // boost::bind(&subscriber::deliver, subscribers_.end(), boost::ref(msg));
 }
 
 
@@ -32,7 +33,6 @@ tcp::socket& tcp_session::socket()
 void tcp_session::start()
 {
   channel_.join(shared_from_this());
-
   start_read();
 
   input_deadline_.async_wait(
@@ -142,15 +142,65 @@ void tcp_session::start_write()
   // Set a deadline for the write operation.
   output_deadline_.expires_from_now(boost::posix_time::seconds(30));
 
-  std::string message_reply = "oooouuu";
+  std::string s = clientMsgHandler();
 
-  if(output_queue_.front() == "new\n")
-    message_reply = "Yeah";
+  //server::getInstance->cntPlus();
+
+  char *message_reply = new char[1024];
+  //message_reply[] = {};
+  message_reply[s.size()]=0;
+  message_reply[s.size()+1]=0;
+  memcpy(message_reply,s.c_str(),s.size());
+
 
   // Start an asynchronous operation to send a message.
   boost::asio::async_write(socket_,
-      boost::asio::buffer(message_reply),
+      boost::asio::buffer(message_reply,1024),
       boost::bind(&tcp_session::handle_write, shared_from_this(), _1));
+
+
+}
+
+std::string tcp_session::clientMsgHandler(){
+
+    std::string s = "Oh nooooo!!!";
+    std::string msg = output_queue_.front();
+    int id_cl = -1;
+    if(msg == "new\n"){
+        if(server::getInstance()->getCnt() < 4)
+        {
+            std::stringstream ss;
+            int id = server::getInstance()->getCnt() - 1;
+            // = load map if(id == 0)
+            ss << id;
+            s = ss.str();
+            Player pl = server::getInstance()->getPlayer(id);
+            pl.alive = true;
+            pl.id = id;
+        }
+        else{
+            s = "-Plno";
+        }
+    }
+    else if(msg.find("LOAD:::") == 4){
+        std::cout << "Jo dostal jsem se sem" << std::endl;
+
+        server::getInstance()->loadMap("prd");
+
+    }
+    else{
+        int id_end = msg.find(":::");
+        if(id_end == 1){
+            id_cl = msg[0] - '0';
+            if(id_cl >= 0 && id_cl <= 3)
+                std::cout << "Pise klient s id: " << id_cl << std::endl;
+        }
+    }
+
+    //std::cout << msg.find("LOAD:::") << std::endl;
+
+    return s;
+
 }
 
 void tcp_session::handle_write(const boost::system::error_code& ec)
@@ -197,6 +247,19 @@ void tcp_session::check_deadline(deadline_timer* deadline)
 
 
 //= server
+
+server* server::m_pInstance = NULL;
+
+server* server::Instance(boost::asio::io_service& io_service,
+                          const tcp::endpoint& listen_endpoint)
+{
+   if (!m_pInstance)   // Only allow one instance of class to be generated.
+       m_pInstance = new server(io_service, listen_endpoint);
+
+   return m_pInstance;
+}
+
+
 
 void server::handle_accept(tcp_session_ptr session,
     const boost::system::error_code& ec)

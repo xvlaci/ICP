@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <deque>
+#include <sstream>
 #include <iostream>
 #include <set>
 #include <boost/bind.hpp>
@@ -23,6 +24,22 @@
 #include <boost/asio/read_until.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/asio/write.hpp>
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
+#include <pthread.h>
+#include <time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
+
+#include "controller.h"
+
+
+struct Player{
+    int id;
+    Square * position;
+    bool alive;
+};
+
 
 using boost::asio::deadline_timer;
 using boost::asio::ip::tcp;
@@ -79,6 +96,7 @@ public:
 
   // Called by the server object to initiate the four actors.
   void start();
+  int client_cnt;
 
 private:
   void stop();
@@ -97,6 +115,8 @@ private:
   void await_output();
 
   void start_write();
+
+  std::string clientMsgHandler();
 
   void handle_write(const boost::system::error_code& ec);
 
@@ -141,6 +161,74 @@ private:
 class server
 {
 public:
+
+  static server* Instance(boost::asio::io_service& io_service,
+                          const tcp::endpoint& listen_endpoint);
+
+  static server * getInstance(){
+    return m_pInstance;
+  }
+
+  void handle_accept(tcp_session_ptr session,
+      const boost::system::error_code& ec);
+
+  void cntPlus(){
+    this->clients_cnt++;
+  }
+
+  int getCnt(){
+    return this->clients_cnt;
+  }
+
+  Player getPlayer(int id){
+      return PLAYERS[id];
+  }
+
+  void *stepper(void *threadid)
+  {
+      while(true){
+          sleep(1);
+          this->move();
+
+      }
+     pthread_exit(NULL);
+  }
+
+  Controller * getCont(){
+    return this->cont;
+  }
+
+  Board * getBoard(){
+      return this->b;
+
+  }
+
+  void loadMap(std::string s){
+      using namespace boost;
+
+      srand(time(NULL));
+
+      this->m_pInstance->cont = new Controller();
+
+      maze_map maze = cont->load("zkusebni_mapa");
+
+
+      this->m_pInstance->b = new Board(maze.width,maze.height, maze.maze);
+      this->m_pInstance->cont->setBoard(this->m_pInstance->b);
+
+
+      int i;
+      int rc = pthread_create(&this->m_pInstance->thread, NULL, server::JHWrapper, static_cast<void *>(m_pInstance));
+
+      if (rc){
+          cout << "Error:unable to create thread," << rc << endl;
+          exit(-1);
+      }
+  }
+
+
+private:
+
   server(boost::asio::io_service& io_service,
       const tcp::endpoint& listen_endpoint)
     : io_service_(io_service),
@@ -149,16 +237,34 @@ public:
     /*subscriber_ptr bc(new udp_broadcaster(io_service_, broadcast_endpoint));
     channel_.join(bc);
     */
+    this->clients_cnt = 0;
+
     tcp_session_ptr new_session(new tcp_session(io_service_, channel_));
 
     acceptor_.async_accept(new_session->socket(),
         boost::bind(&server::handle_accept, this, new_session, _1));
   }
 
-  void handle_accept(tcp_session_ptr session,
-      const boost::system::error_code& ec);
+  static void *JHWrapper(void *self)
+  {
+     server *that = static_cast<server*>(self);
+     return that->stepper(self);
+  }
 
-private:
+  void move(){
+      cont->moveGuard();
+      b->printMap();
+
+  }
+
+
+  pthread_t thread;
+  Player PLAYERS[4];
+  Controller * cont;
+  Board * b;
+  static server* m_pInstance;
+  int clients_cnt;
+
   boost::asio::io_service& io_service_;
   tcp::acceptor acceptor_;
   channel channel_;

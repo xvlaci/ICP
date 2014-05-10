@@ -36,13 +36,16 @@ void *PrintHello(void *threadid)
 
 int main(int argc, char *argv[])
 {
+    /*
     using namespace boost;
 
     srand(time(NULL));
+    */
 
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
+    /*
     cont = new Controller();
 
     maze_map maze = cont->load("zkusebni_mapa");
@@ -59,7 +62,7 @@ int main(int argc, char *argv[])
         cout << "Error:unable to create thread," << rc << endl;
         exit(-1);
     }
-
+    */
     //pthread_exit(NULL);
 
 
