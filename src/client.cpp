@@ -24,8 +24,8 @@ void client::client_init()
         size_t reply_length = boost::asio::read(this->socket(),
             boost::asio::buffer(reply, 1024));
         //std::cout << "Reply is: ";
-        std::cout << reply;
-        std::cout << std::endl;
+        //std::cout << reply;
+        //std::cout << std::endl;
 
         client_id = reply[0];
 
@@ -57,8 +57,8 @@ void client::send(std::string s){
         size_t reply_length = boost::asio::read(this->socket(),
             boost::asio::buffer(reply, 1024));
         //std::cout << "Reply is: ";
-        std::cout << reply;
-        std::cout << std::endl;
+        //std::cout << reply;
+        //std::cout << std::endl;
       }
       catch (std::exception& e)
       {

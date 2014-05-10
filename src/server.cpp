@@ -182,7 +182,7 @@ std::string tcp_session::clientMsgHandler(){
             s = "-Plno";
         }
     }
-    else if(msg.find("LOAD:::") == 4){
+    else if(msg.find(":::LOAD:::") == 1 && (msg[0] - '0') == 0){
         std::cout << "Jo dostal jsem se sem" << std::endl;
 
         server::getInstance()->loadMap("prd");
@@ -192,14 +192,56 @@ std::string tcp_session::clientMsgHandler(){
         int id_end = msg.find(":::");
         if(id_end == 1){
             id_cl = msg[0] - '0';
-            if(id_cl >= 0 && id_cl <= 3)
-                std::cout << "Pise klient s id: " << id_cl << std::endl;
+            if(id_cl >= 0 && id_cl <= 3){
+                if(msg.find(":::COMMAND:::") == 1)
+                {
+                    clientCommandHandler(server::getInstance()->getPlayer(id_cl), msg);
+                }
+            }
         }
     }
 
-    //std::cout << msg.find("LOAD:::") << std::endl;
-
     return s;
+
+}
+
+void tcp_session::clientCommandHandler(Player player, std::string command){
+
+    Controller * cont = server::getInstance()->getCont();
+    Board * b = server::getInstance()->getBoard();
+
+    if(command.find(":::GO:::") == 11){
+        std::cout << "Jdu dopredu!!" << std::endl;
+        player.go = true;
+        server::getInstance()->setPlayer(player.id, cont->move(player.position), player.alive, true);
+    }
+    else if(command.find(":::STOP:::") == 11){
+        std::cout << "Stojim!!" << std::endl;
+        player.go = false;
+        server::getInstance()->setPlayer(player.id, player.position, player.alive, false);
+    }
+    else if(command.find(":::LEFT:::") == 11){
+        std::cout << "Otacim se vlevo!!" << std::endl;
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, LEFT), player.alive, player.go);
+    }
+    else if(command.find(":::RIGHT:::") == 11){
+        std::cout << "Otacim se vpravo!!" << std::endl;
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, RIGHT), player.alive, player.go);
+    }
+    else if(command.find(":::BACK:::") == 11){
+        std::cout << "Otacim se!!" << std::endl;
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, DOWN), player.alive, player.go);
+    }
+    else if(command.find(":::PICK:::") == 11){
+        std::cout << "Zvedam klic" << std::endl;
+        server::getInstance()->setPlayer(player.id, cont->pickUpKey(player.position), player.alive, false);
+    }
+    else if(command.find(":::OPEN:::") == 11){
+        std::cout << "Oteviram branu" << std::endl;
+        server::getInstance()->setPlayer(player.id, cont->openGate(player.position), player.alive, false);
+    }
+    else{}
+
 
 }
 
@@ -273,4 +315,78 @@ void server::handle_accept(tcp_session_ptr session,
     acceptor_.async_accept(new_session->socket(),
         boost::bind(&server::handle_accept, this, new_session, _1));
   }
+}
+
+void server::cntPlus(){
+  this->m_pInstance->clients_cnt++;
+}
+
+int server::getCnt(){
+  return this->m_pInstance->clients_cnt;
+}
+
+Player server::getPlayer(int id){
+    return this->m_pInstance->PLAYERS[id];
+}
+
+void * server::stepper(void *threadid)
+{
+    while(true){
+        sleep(5);
+        this->m_pInstance->move();
+
+    }
+   pthread_exit(NULL);
+}
+
+Controller * server::getCont(){
+  return this->m_pInstance->cont;
+}
+
+Board * server::getBoard(){
+    return this->m_pInstance->b;
+
+}
+
+void server::loadMap(std::string s){
+    using namespace boost;
+
+    srand(time(NULL));
+
+    this->m_pInstance->cont = new Controller();
+
+    maze_map maze = cont->load("zkusebni_mapa");
+
+
+    this->m_pInstance->b = new Board(maze.width,maze.height, maze.maze);
+    this->m_pInstance->cont->setBoard(this->m_pInstance->b);
+
+    for(int i = 0; i < 4; i++){
+        this->m_pInstance->PLAYERS[i].position = this->m_pInstance->b->player_start_pos[i];
+        this->m_pInstance->PLAYERS[i].id = i;
+        this->m_pInstance->PLAYERS[i].alive = false;
+        this->m_pInstance->PLAYERS[i].go = false;
+    }
+
+
+    int i;
+    int rc = pthread_create(&this->m_pInstance->thread, NULL, server::JHWrapper, static_cast<void *>(m_pInstance));
+
+    if (rc){
+        cout << "Error:unable to create thread," << rc << endl;
+        exit(-1);
+    }
+}
+
+void server::move(){
+    this->m_pInstance->cont->moveGuard();
+    this->m_pInstance->b->printMap();
+
+}
+
+void server::setPlayer(int id, Square * s, bool alive, bool go){
+    this->m_pInstance->PLAYERS[id].position = s;
+    this->m_pInstance->PLAYERS[id].alive = alive;
+    this->m_pInstance->PLAYERS[id].go = go;
+    this->m_pInstance->PLAYERS[id].turn = true;
 }

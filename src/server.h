@@ -38,6 +38,8 @@ struct Player{
     int id;
     Square * position;
     bool alive;
+    bool go;
+    bool turn;
 };
 
 
@@ -118,6 +120,8 @@ private:
 
   std::string clientMsgHandler();
 
+  void clientCommandHandler(Player player, std::string command);
+
   void handle_write(const boost::system::error_code& ec);
 
   void check_deadline(deadline_timer* deadline);
@@ -165,66 +169,29 @@ public:
   static server* Instance(boost::asio::io_service& io_service,
                           const tcp::endpoint& listen_endpoint);
 
-  static server * getInstance(){
-    return m_pInstance;
-  }
 
   void handle_accept(tcp_session_ptr session,
       const boost::system::error_code& ec);
 
-  void cntPlus(){
-    this->clients_cnt++;
+  static server * getInstance(){
+    return m_pInstance;
   }
 
-  int getCnt(){
-    return this->clients_cnt;
-  }
+  void cntPlus();
 
-  Player getPlayer(int id){
-      return PLAYERS[id];
-  }
+  int getCnt();
 
-  void *stepper(void *threadid)
-  {
-      while(true){
-          sleep(1);
-          this->move();
+  Player getPlayer(int id);
 
-      }
-     pthread_exit(NULL);
-  }
+  void *stepper(void *threadid);
 
-  Controller * getCont(){
-    return this->cont;
-  }
+  Controller * getCont();
 
-  Board * getBoard(){
-      return this->b;
+  Board * getBoard();
 
-  }
+  void loadMap(std::string s);
 
-  void loadMap(std::string s){
-      using namespace boost;
-
-      srand(time(NULL));
-
-      this->m_pInstance->cont = new Controller();
-
-      maze_map maze = cont->load("zkusebni_mapa");
-
-
-      this->m_pInstance->b = new Board(maze.width,maze.height, maze.maze);
-      this->m_pInstance->cont->setBoard(this->m_pInstance->b);
-
-
-      int i;
-      int rc = pthread_create(&this->m_pInstance->thread, NULL, server::JHWrapper, static_cast<void *>(m_pInstance));
-
-      if (rc){
-          cout << "Error:unable to create thread," << rc << endl;
-          exit(-1);
-      }
-  }
+  void setPlayer(int id, Square * s, bool alive, bool go);
 
 
 private:
@@ -245,17 +212,12 @@ private:
         boost::bind(&server::handle_accept, this, new_session, _1));
   }
 
-  static void *JHWrapper(void *self)
-  {
+  static void * JHWrapper(void *self){
      server *that = static_cast<server*>(self);
      return that->stepper(self);
   }
 
-  void move(){
-      cont->moveGuard();
-      b->printMap();
-
-  }
+  void move();
 
 
   pthread_t thread;
