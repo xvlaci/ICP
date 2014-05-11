@@ -17,15 +17,12 @@ void client::client_init()
         std::string message("new\n");
         this->client_connect();
         using namespace std;
-        //std::cout << message << std::endl;
         boost::asio::write(this->socket(), boost::asio::buffer(message, message.size()));
 
         char reply[1024];
         size_t reply_length = boost::asio::read(this->socket(),
             boost::asio::buffer(reply, 1024));
-        //std::cout << "Reply is: ";
-        //std::cout << reply;
-        //std::cout << std::endl;
+
 
         client_id = reply[0];
 
@@ -80,23 +77,21 @@ void client::send(std::string s){
 
         message += "\n";
 
-        //std::cout << message << std::endl;
 
         this->client_connect();
         using namespace std;
 
         boost::asio::write(this->socket(), boost::asio::buffer(message, message.size()));
         if(new_state){
-            boost::asio::read(this->socket(), boost::asio::buffer(state, 2550));
-            std::cout << "Reply is: " << state << std::endl;
+            boost::asio::read(this->socket(), boost::asio::buffer(tmp_state, 2550));
+            if(tmp_state[0] != 'D')
+                for(int i=0; i<2550; i++)
+                    state_[i] = tmp_state[i];
         }
         else{
             char reply[2550];
             boost::asio::read(this->socket(),
                 boost::asio::buffer(reply, 2550));
-            //std::cout << "Reply is: ";
-            //std::cout << reply;
-            //std::cout << std::endl;
         }
       }
       catch (std::exception& e)

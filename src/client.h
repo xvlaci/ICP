@@ -23,6 +23,7 @@ public:
     {
         iterator_ = resolver_.resolve(query_);
         client_init();
+        state_[0] = 'q';
     }
 
     void client_connect();
@@ -32,8 +33,14 @@ public:
       return socket_;
     }
 
+    std::string getState(){
+        return this->state_;
+    }
+
     void send(std::string s);
 
+    char state_[2550];
+    char tmp_state[2550];
 private:
 
     void client_init();
@@ -44,7 +51,7 @@ private:
     tcp::resolver::iterator iterator_;
     tcp::socket socket_;
     char client_id;
-    char state[2550];
+
 };
 
 #endif // CLIENT_H

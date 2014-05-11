@@ -190,7 +190,6 @@ std::string tcp_session::clientMsgHandler()
                 }
                 if(msg.find(":::NEWSTATE:::") == 1){
                     if(server::getInstance()->getPlayer(id_cl).waitin){
-                        std::cout << "Sestavuju mapu" << std::endl;
                         return server::getInstance()->newMap(id_cl);
                         //return "Nova mapa";
                     }

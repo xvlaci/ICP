@@ -41,6 +41,7 @@ ClientWindow::~ClientWindow()
 
 void ClientWindow::repaint(std::string board_state)
 {
+    scene->clear();
     std::stringstream stream(board_state);
     std::string temp;
 
@@ -173,6 +174,16 @@ void ClientWindow::start_connection()
 {
     my_client = new client(io_service, server, port);
 
+    me = this;
+
+    void *i;
+    int rc = pthread_create(&this->thread, NULL, ClientWindow::JHWrapper, static_cast<void *>(i));
+
+    if (rc){
+        std::cout << "Error:unable to create thread," << rc << std::endl;
+        exit(-1);
+    }
+
     /* if connected */
     ui->disconnectButton->setDisabled(false);
     ui->lineEdit->setDisabled(false);
@@ -192,6 +203,11 @@ void ClientWindow::returnPressed()
     ui->lineEdit->clear();
 
     my_client->send(request);
+    if(my_client->state_[0] != 'q')
+    {
+        repaint(my_client->state_);
+    }
+
 }
 
 void ClientWindow::on_connectButton_clicked()
