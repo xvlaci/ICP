@@ -6,11 +6,10 @@
 #include <sstream>
 #include <fstream>
 
-
-
 Controller::Controller(){}
 
-Square * Controller::move(Square * s){
+Square * Controller::move(Square * s)
+{
 
     if(s->getObjectType() != PLAYER)
         return 0;
@@ -40,7 +39,8 @@ Square * Controller::move(Square * s){
     }
 }
 
-void Controller::newCoords(int & x, int & y, int facing){
+void Controller::newCoords(int & x, int & y, int facing)
+{
     switch(facing){
         case UP:
             y--;
@@ -57,7 +57,8 @@ void Controller::newCoords(int & x, int & y, int facing){
     }
 }
 
-Square * Controller::pickUpKey(Square * s){
+Square * Controller::pickUpKey(Square * s)
+{
     if(s->getObjectType() != PLAYER)
         return 0;
 
@@ -72,13 +73,12 @@ Square * Controller::pickUpKey(Square * s){
         new_s->clearSquare();
         s->getCharacter()->pickUpKey();
         return s;
-
-        // nejaka zprava
     }
     return s;
 }
 
-Square * Controller::openGate(Square * s){
+Square * Controller::openGate(Square * s)
+{
     if(s->getObjectType() != PLAYER)
         return 0;
 
@@ -93,13 +93,12 @@ Square * Controller::openGate(Square * s){
         new_s->clearSquare();
         s->getCharacter()->useKey();
         return s;
-
-        // nejaka zprava
     }
     return s;
 }
 
-void Controller::moveGuard(){
+void Controller::moveGuard()
+{
     int rn;
     int x, y;
     Square * guard;
@@ -116,8 +115,6 @@ void Controller::moveGuard(){
             int new_y = y;
 
             if(rn <= 70){
-                //= Kupredu
-                //std::cout << std::endl <<"dopredu - " << guard->getCharacter()->facing();
                 newCoords(new_x, new_y, guard->getCharacter()->facing());
                 Square * new_s = this->b->getSquare(new_x, new_y);
 
@@ -128,37 +125,26 @@ void Controller::moveGuard(){
                     new_s->setObjectType(GUARD);
                     this->b->guards_pos[i]->clearSquare();
                     this->b->guards_pos[i] = new_s;
-                    //std::cout << " - povedlo" << std::endl;
                 }
-                //std::cout << std::endl;
-
             }
             else if(rn < 80){
-                //= Otoceni proti hodinovym rucickam
                 guard->getCharacter()->turn(guard->getCharacter()->facing()-1);
                 tries = 0;
-                //std::cout << "Otoceni doprava - povedlo" << std::endl;
             }
             else if(rn < 90){
-                //= Otoceni po smeru hodinovych rucicek
                 guard->getCharacter()->turn(guard->getCharacter()->facing()+1);
                 tries = 0;
-                //std::cout << "Otoceni doleva - povedlo" << std::endl;
-
             }
             else{
-                //= Otoceni o 180 stupnu
                 guard->getCharacter()->turn(guard->getCharacter()->facing()-2);
                 tries = 0;
-                //std::cout << "Otoceni - povedlo" << std::endl;
-
             }
         }
-
     }
 }
 
-Square * Controller::turn(Square * s, int dir){
+Square * Controller::turn(Square * s, int dir)
+{
     if(s->getObjectType() != PLAYER){
         return 0;
     }
@@ -168,18 +154,21 @@ Square * Controller::turn(Square * s, int dir){
     return s;
 }
 
-Board * Controller::getBoard(){
+Board * Controller::getBoard()
+{
     return this->b;
 }
 
 
-void Controller::setBoard(Board * b){
+void Controller::setBoard(Board * b)
+{
     this->b = b;
 }
 
 
 
-maze_map Controller::load(string filename){
+maze_map Controller::load(string filename)
+{
     ifstream f;
     f.open(filename.c_str());
     string line;
@@ -199,35 +188,15 @@ maze_map Controller::load(string filename){
     return tmp_maze_map;
 }
 
-void Controller::save(string filename){
-
+void Controller::save(string filename)
+{
     using namespace std;
-   /*
-    string msg = b->generateMsg();
-    stringstream ss(msg.c_str());
-    string wandh;
-    std::getline(ss, msg);
-    wandh.append(msg);
-    wandh.append("\n");
-    std::getline(ss, msg);
-    wandh.append(msg);
-    wandh.append("\n");
-    std::getline(ss, msg);
-
-
-    for(int i = 1; i <= b->getHeight(); i++){
-        msg.insert(b->getWidth()*i, "\n");
-    }
-
-    wandh.append(msg);
-    */
 
     ofstream f;
     string msg = b->generateMsg();
     f.open(filename.c_str());
     if (f.is_open()) {
         f << msg;
-
     }
     f.close();
 }

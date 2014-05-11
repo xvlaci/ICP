@@ -30,6 +30,12 @@ ClientWindow::~ClientWindow()
     delete ui;
 }
 
+void * ClientWindow::newMapState(void *threadid)
+{
+    my_client = new client(io_service, server, port);
+
+}
+
 void ClientWindow::repaint(std::string board_state)
 {
     std::stringstream stream(board_state);
@@ -73,8 +79,14 @@ void ClientWindow::repaint(std::string board_state)
 
 void ClientWindow::start_connection()
 {
-    my_client = new client(io_service, server, port);
+    void * i;
+    int rc = pthread_create(&this->thread, NULL, ClientWindow::JHWrapper, static_cast<void *>(i));
 
+    if (rc){
+        std::cout << "Error:unable to create thread," << rc << std::endl;
+        exit(-1);
+    }
+    //pthread_exit(NULL);
     /* if connected */
     ui->disconnectButton->setDisabled(false);
     ui->lineEdit->setDisabled(false);

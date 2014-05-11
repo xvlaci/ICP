@@ -23,9 +23,9 @@ public:
     {
         iterator_ = resolver_.resolve(query_);
         client_init();
+    }
 
-
-
+    void newFuckingThread(){
         void * i;
         int rc = pthread_create(&this->thread, NULL, client::JHWrapper, static_cast<void *>(i));
 
@@ -34,7 +34,6 @@ public:
             exit(-1);
         }
         //pthread_exit(NULL);
-
 
 
     }

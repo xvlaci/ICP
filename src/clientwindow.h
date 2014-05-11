@@ -11,6 +11,12 @@
 #include <QtGui>
 #include <QGraphicsScene>
 
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+#include <pthread.h>
+#include <time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "client.h"
 
 namespace Ui {
@@ -31,6 +37,14 @@ private:
     boost::asio::io_service io_service;
     QGraphicsScene *scene;
 
+    static void * JHWrapper(void *self){
+       ClientWindow *that = static_cast<ClientWindow*>(self);
+       return that->newMapState(self);
+    }
+
+    void * newMapState(void *threadid);
+
+    pthread_t thread;
     std::string server;
     std::string port;
 

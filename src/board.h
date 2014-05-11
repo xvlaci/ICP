@@ -10,18 +10,18 @@
 
 class Board{
 private:
+    void loadMap();
+
     int width;
     int height;
     std::string map;
     Square *** board;
-    void loadMap();
     char symbols[13];
 public:
     Board(int width, int height, std::string map);
     ~Board();
     int getWidth();
     int getHeight();
-
     Square * getSquare(int x, int y);
     std::string generateMsg();
     void printMap();
@@ -29,7 +29,6 @@ public:
     Square * player_start_pos[4];
     Square * guards_pos[15];
     int guards;
-
 };
 
 #endif // BOARD_H

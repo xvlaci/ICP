@@ -10,11 +10,6 @@ void client::client_connect()
 
 void * client::newMapState(void *threadid)
 {
-    //while(true){
-        sleep(1);
-        std::cout << "Hello" << std::endl;
-        using boost::asio::ip::tcp;
-
 
 }
 

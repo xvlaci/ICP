@@ -1,9 +1,11 @@
+#include "board.h"
+
 #include <cstdlib>
 #include <cstring>
 #include <boost/lexical_cast.hpp>
-#include "board.h"
 
-Board::Board(int width, int height, std::string map){
+Board::Board(int width, int height, std::string map)
+{
     this->width = width;
     this->height = height;
     this->map = map;
@@ -13,32 +15,21 @@ Board::Board(int width, int height, std::string map){
         std::cout << "shit";
     }
 
-    for (int i = 0; i < width; i++ )
-    {
-      /* x_i here is the size of given row, no need to
-       * multiply by sizeof( char ), it's always 1
-       */
-
-
-      if (( this->board[i] = ( Square** )malloc( height*sizeof(Square*))) == NULL )
-      { std::cout << "shit"; }
-
-      /* probably init the row here */
-
+    for (int i = 0; i < width; i++ ){
+        if (( this->board[i] = ( Square** )malloc( height*sizeof(Square*))) == NULL ){
+            std::cout << "shit";
+        }
     }
-
-
     loadMap();
 }
 
-void Board::loadMap(){
+void Board::loadMap()
+{
     int players = 0;
     this->guards = 0;
     const char *ch = this->map.c_str();
     for (int y = 0; y < height; y++){
         for(int x = 0; x < width; x++){
-
-
             this->board[x][y] = new Square(x,y,((int)*ch) - '0');
             //std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
             if((int)*ch >= 'e' && (int)*ch <= 'h'){
@@ -48,12 +39,9 @@ void Board::loadMap(){
             if((int)*ch >= 'a' && (int)*ch <= 'd'){
                 this->guards_pos[this->guards++] = this->board[x][y];
             }
-
             ch++;
         }
     }
-
-
 }
 
 Square * Board::getSquare(int x, int y){
@@ -72,7 +60,6 @@ std::string Board::generateMsg(){
                 //Guard pozice a, b, c, d ... Player pozice e, f, g, h
                 char sym = (s->getObjectType() - 4) * 4 + 'a' + s->getCharacter()->facing();
                 msg.push_back(sym);
-
             }
             else
             {
@@ -96,8 +83,6 @@ void Board::printMap(){
             }
         }
         std::cout << std::endl;
-
-
     }
 }
 

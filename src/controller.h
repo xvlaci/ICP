@@ -15,9 +15,10 @@ struct maze_map{
 
 class Controller{
 private:
+    void newCoords(int & x, int & y, int facing);
+
     string status;
     Board * b;
-    void newCoords(int & x, int & y, int facing);
 public:
     Controller();
     ~Controller();
