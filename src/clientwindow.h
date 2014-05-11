@@ -31,15 +31,17 @@ private:
     boost::asio::io_service io_service;
     QGraphicsScene *scene;
 
+    std::string server;
+    std::string port;
+
     void repaint(std::string board_state);
+    void start_connection();
 
 
 private slots:
     void returnPressed();
-
-
-
     void on_connectButton_clicked();
+
 };
 
 #endif // CLIENTWINDOW_H

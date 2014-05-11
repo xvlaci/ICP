@@ -15,9 +15,20 @@ public:
     explicit ConnectDialog(QWidget *parent = 0);
     ~ConnectDialog();
 
+    std::string getServer();
+    std::string getPort();
+
 private:
     Ui::ConnectDialog *ui;
 
+    QString server;
+    QString port;
+
+signals:
+    void sigconnect();
+
+private slots:
+    void on_pushButtonConect_clicked();
 };
 
 #endif // CONNECTDIALOG_H

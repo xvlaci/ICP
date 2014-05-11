@@ -23,13 +23,6 @@ ClientWindow::ClientWindow(QWidget *parent) :
     std::string message("8\n5\n11111111\n10000001\n10011001\n10000001\n11111111\n");
     this->repaint(message);
 
-    try {
-    my_client = new client(io_service, "127.0.0.1", "2345");
-    }
-    catch (std::exception& e) {
-        std::cerr << "HUE OSETRENO";
-    }
-
 }
 
 ClientWindow::~ClientWindow()
@@ -78,6 +71,22 @@ void ClientWindow::repaint(std::string board_state)
 
 }
 
+void ClientWindow::start_connection()
+{
+    my_client = new client(io_service, server, port);
+
+    /* if connected */
+    ui->disconnectButton->setDisabled(false);
+    ui->lineEdit->setDisabled(false);
+
+    /* else */
+    /* popup ze se nepodarilo pripojit */
+
+    /* todo: udelat funkcni disconnect tlacitko */
+
+
+}
+
 void ClientWindow::returnPressed()
 {
     QString qrequest = ui->lineEdit->text();
@@ -93,5 +102,19 @@ void ClientWindow::on_connectButton_clicked()
 {
     ConnectDialog cDialog;
     cDialog.setModal(true);
-    cDialog.exec();
+    if(cDialog.exec() == 1)
+    {
+
+        this->server = cDialog.getServer();
+        this->port = cDialog.getPort();
+
+        this->start_connection();
+    }
+    else
+    {
+        std::cout << "nic nezadano" << std::endl;
+    }
+
+
+
 }
