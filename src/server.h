@@ -40,6 +40,7 @@ struct Player{
     bool alive;
     bool go;
     bool turn;
+    bool waitin;
 };
 
 
@@ -224,6 +225,8 @@ private:
   Player PLAYERS[4];
   Controller * cont;
   Board * b;
+  std::string map_new_state;
+
   static server* m_pInstance;
   int clients_cnt;
 

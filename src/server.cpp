@@ -3,7 +3,6 @@
 void channel::join(subscriber_ptr subscriber)
 {
   subscribers_.insert(subscriber);
-  server::getInstance()->cntPlus();
 }
 
 void channel::leave(subscriber_ptr subscriber)
@@ -90,6 +89,10 @@ void tcp_session::handle_read(const boost::system::error_code& ec)
     std::string msg;
     std::istream is(&input_buffer_);
     std::getline(is, msg);
+    std::cout << "toto:"<< msg << std::endl;
+
+    if(msg == "new")
+        server::getInstance()->cntPlus();
 
     if (!msg.empty())
     {
@@ -165,6 +168,7 @@ std::string tcp_session::clientMsgHandler(){
 
     std::string s = "Oh nooooo!!!";
     std::string msg = output_queue_.front();
+    std::cout << msg << std::endl;
     int id_cl = -1;
     if(msg == "new\n"){
         if(server::getInstance()->getCnt() < 4)
@@ -189,6 +193,7 @@ std::string tcp_session::clientMsgHandler(){
 
     }
     else{
+        std::cout << "why?" << std::endl;
         int id_end = msg.find(":::");
         if(id_end == 1){
             id_cl = msg[0] - '0';
@@ -210,6 +215,9 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
     Controller * cont = server::getInstance()->getCont();
     Board * b = server::getInstance()->getBoard();
 
+    if(player.turn)
+        return;
+
     if(command.find(":::GO:::") == 11){
         std::cout << "Jdu dopredu!!" << std::endl;
         player.go = true;
@@ -228,9 +236,13 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
         std::cout << "Otacim se vpravo!!" << std::endl;
         server::getInstance()->setPlayer(player.id, cont->turn(player.position, RIGHT), player.alive, player.go);
     }
-    else if(command.find(":::BACK:::") == 11){
-        std::cout << "Otacim se!!" << std::endl;
+    else if(command.find(":::DOWN:::") == 11){
+        std::cout << "Otacim se dolu!!" << std::endl;
         server::getInstance()->setPlayer(player.id, cont->turn(player.position, DOWN), player.alive, player.go);
+    }
+    else if(command.find(":::UP:::") == 11){
+        std::cout << "Otacim se nahoru!!" << std::endl;
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, UP), player.alive, player.go);
     }
     else if(command.find(":::PICK:::") == 11){
         std::cout << "Zvedam klic" << std::endl;
@@ -241,6 +253,7 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
         server::getInstance()->setPlayer(player.id, cont->openGate(player.position), player.alive, false);
     }
     else{}
+
 
 
 }
@@ -379,14 +392,25 @@ void server::loadMap(std::string s){
 }
 
 void server::move(){
-    this->m_pInstance->cont->moveGuard();
+    for(int i = 0; i < 4; i++){
+        if(!this->m_pInstance->PLAYERS[i].turn && this->m_pInstance->PLAYERS[i].go){
+            this->m_pInstance->setPlayer(i, this->m_pInstance->cont->move(this->m_pInstance->PLAYERS[i].position), true, true);
+        }
+        this->m_pInstance->PLAYERS[i].turn = false;
+        this->m_pInstance->PLAYERS[i].waitin = true;
+    }
     this->m_pInstance->b->printMap();
 
+    map_new_state = this->m_pInstance->b->generateMsg();
+    this->m_pInstance->cont->moveGuard();
 }
 
 void server::setPlayer(int id, Square * s, bool alive, bool go){
     this->m_pInstance->PLAYERS[id].position = s;
-    this->m_pInstance->PLAYERS[id].alive = alive;
+    if(s == 0)
+        this->m_pInstance->PLAYERS[id].alive = false;
+    else
+        this->m_pInstance->PLAYERS[id].alive = true;
     this->m_pInstance->PLAYERS[id].go = go;
     this->m_pInstance->PLAYERS[id].turn = true;
 }

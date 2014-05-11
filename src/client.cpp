@@ -42,9 +42,33 @@ void client::send(std::string s){
 
     try
       {
+
+
         std::string message;
         message += client_id;
         message += ":::";
+        if(s == "go")
+            s = "COMMAND:::GO:::";
+        else if (s == "stop")
+            s = "COMMAND:::STOP:::";
+        else if (s == "left")
+            s = "COMMAND:::LEFT:::";
+        else if (s == "right")
+            s = "COMMAND:::RIGHT:::";
+        else if (s == "down")
+            s = "COMMAND:::DOWN:::";
+        else if (s == "up")
+            s = "COMMAND:::UP:::";
+        else if (s == "pick")
+            s = "COMMAND:::PICK:::";
+        else if (s == "open")
+            s = "COMMAND:::OPEN:::";
+        else if (s == "load")
+            s = "LOAD:::";
+
+
+
+                    ;
         message += s;
         message += "\n";
 
