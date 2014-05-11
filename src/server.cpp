@@ -122,17 +122,30 @@ void tcp_session::start_write()
 
     std::string s = clientMsgHandler();
 
-    char *message_reply = new char[1024];
+    if(server::getInstance()->want_new_state){
+        server::getInstance()->want_new_state = false;
+        char *message_reply = new char[2550];
+        message_reply[s.size()]=0;
+        message_reply[s.size()+1]=0;
+        memcpy(message_reply,s.c_str(),s.size());
+        boost::asio::async_write(socket_,
+            boost::asio::buffer(message_reply,2550),
+            boost::bind(&tcp_session::handle_write, shared_from_this(), _1));
 
-    message_reply[s.size()]=0;
-    message_reply[s.size()+1]=0;
-    memcpy(message_reply,s.c_str(),s.size());
+    }
+    else{
+        char *message_reply = new char[2550];
 
+        message_reply[s.size()]=0;
+        message_reply[s.size()+1]=0;
+        memcpy(message_reply,s.c_str(),s.size());
 
-    boost::asio::async_write(socket_,
-        boost::asio::buffer(message_reply,1024),
-        boost::bind(&tcp_session::handle_write, shared_from_this(), _1));
-}
+        boost::asio::async_write(socket_,
+            boost::asio::buffer(message_reply,2550),
+            boost::bind(&tcp_session::handle_write, shared_from_this(), _1));
+    }
+
+    }
 
 std::string tcp_session::clientMsgHandler()
 {
@@ -156,13 +169,15 @@ std::string tcp_session::clientMsgHandler()
     }
     else if(msg.find(":::LOAD:::") == 1 && (msg[0] - '0') == 0){
         server::getInstance()->waitin_time_ = msg[11] - '0';
-
-
-        //server::getInstance()->loadMap("prd");
+        //std::cout << "|" << msg[11] - '0' << "|" << msg.substr(14, msg.length()-15) << "|" << std::endl;
+        server::getInstance()->loadMap(msg.substr(14, msg.length()-15));
+        server::getInstance()->want_new_state = true;
+        return server::getInstance()->getBoard()->generateMsg();
     }
     else if(msg.find(":::SAVE:::") == 1){
         Controller* c = server::getInstance()->getCont();
-        c->save(msg.substr(11, msg.length() - 10));
+        //std::cout << "|" << msg.substr(11, msg.length() - 12) << "|" << std::endl;
+        c->save(msg.substr(11, msg.length() - 12));
     }
     else{
         int id_end = msg.find(":::");
@@ -174,15 +189,13 @@ std::string tcp_session::clientMsgHandler()
                     clientCommandHandler(server::getInstance()->getPlayer(id_cl), msg);
                 }
                 if(msg.find(":::NEWSTATE:::") == 1){
-                    /*if(server::getInstance()->getPlayer(id_cl).waitin){
-                        return server::getInsatnce()->newMap(id_cl);
-                        return "Nova mapa";
+                    if(server::getInstance()->getPlayer(id_cl).waitin){
+                        std::cout << "Sestavuju mapu" << std::endl;
+                        return server::getInstance()->newMap(id_cl);
+                        //return "Nova mapa";
                     }
                     else
                         return "DENIED";
-                    */
-
-                    return "Denied";
                 }
             }
         }
@@ -316,7 +329,7 @@ Player server::getPlayer(int id)
 void * server::stepper(void *threadid)
 {
     while(true){
-        sleep(5);
+        sleep(server::getInstance()->waitin_time_);
         this->m_pInstance->move();
     }
     pthread_exit(NULL);
@@ -341,7 +354,7 @@ void server::loadMap(std::string s)
 
     this->m_pInstance->cont = new Controller();
 
-    maze_map maze = cont->load("zkusebni_mapa");
+    maze_map maze = cont->load(s);
 
 
     this->m_pInstance->b = new Board(maze.width,maze.height, maze.maze);
@@ -354,6 +367,8 @@ void server::loadMap(std::string s)
         this->m_pInstance->PLAYERS[i].go = false;
     }
 
+    this->m_pInstance->map_loaded = true;
+
     int rc = pthread_create(&this->m_pInstance->thread, NULL, server::JHWrapper, static_cast<void *>(m_pInstance));
 
     if (rc){
@@ -364,8 +379,13 @@ void server::loadMap(std::string s)
 
 std::string server::newMap(int id)
 {
-    this->m_pInstance->PLAYERS[id].waitin = false;
-    return this->m_pInstance->map_new_state;
+    if(this->m_pInstance->PLAYERS[id].waitin && this->m_pInstance->map_loaded){
+        this->m_pInstance->PLAYERS[id].waitin = false;
+        this->m_pInstance->want_new_state = true;
+        return this->m_pInstance->map_new_state;
+    }
+
+    return "DENIED";
 }
 
 void server::move()
@@ -379,7 +399,7 @@ void server::move()
     }
     this->m_pInstance->b->printMap();
 
-    map_new_state = this->m_pInstance->b->generateMsg();
+    this->m_pInstance->map_new_state = this->m_pInstance->b->generateMsg();
     this->m_pInstance->cont->moveGuard();
 }
 

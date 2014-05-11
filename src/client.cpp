@@ -43,7 +43,7 @@ void client::send(std::string s){
     try
       {
 
-
+        bool new_state = false;
         std::string message;
         message += client_id;
         message += ":::";
@@ -66,27 +66,38 @@ void client::send(std::string s){
         else if (s.find("load") == 0){
             message += "LOAD:::";
             message += s[5];
+            message += s.substr(5, s.length()-5);
+            new_state = true;
         }
         else if (s.find("save") == 0){
             message += "SAVE:::";
             message += s.substr(5,s.length()-4);
         }
+        else{
+            message += "NEWSTATE:::";
+            new_state = true;
+        }
 
         message += "\n";
 
-        std::cout << message << std::endl;
+        //std::cout << message << std::endl;
 
         this->client_connect();
         using namespace std;
 
         boost::asio::write(this->socket(), boost::asio::buffer(message, message.size()));
-
-        char reply[1024];
-        size_t reply_length = boost::asio::read(this->socket(),
-            boost::asio::buffer(reply, 1024));
-        //std::cout << "Reply is: ";
-        //std::cout << reply;
-        //std::cout << std::endl;
+        if(new_state){
+            boost::asio::read(this->socket(), boost::asio::buffer(state, 2550));
+            std::cout << "Reply is: " << state << std::endl;
+        }
+        else{
+            char reply[2550];
+            boost::asio::read(this->socket(),
+                boost::asio::buffer(reply, 2550));
+            //std::cout << "Reply is: ";
+            //std::cout << reply;
+            //std::cout << std::endl;
+        }
       }
       catch (std::exception& e)
       {

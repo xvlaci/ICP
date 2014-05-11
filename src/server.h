@@ -127,6 +127,7 @@ private:
 
   void check_deadline(deadline_timer* deadline);
 
+  bool map_loaded;
   channel& channel_;
   tcp::socket socket_;
   boost::asio::streambuf input_buffer_;
@@ -197,6 +198,8 @@ public:
   std::string newMap(int id);
 
   int waitin_time_;
+  bool want_new_state;
+  bool map_loaded;
 
 private:
   server(boost::asio::io_service& io_service,
@@ -208,6 +211,7 @@ private:
     channel_.join(bc);
     */
     this->clients_cnt = 0;
+    this->map_loaded;
 
     tcp_session_ptr new_session(new tcp_session(io_service_, channel_));
 
