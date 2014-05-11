@@ -1,3 +1,8 @@
+/**
+@author Martin Vlacil - xvlaci00@stud.fit.vutbr.cz
+@author Jan Sedo      - xsedoj00@stud.fit.vutbr.cz
+*/
+
 #ifndef BOARD_H
 #define BOARD_H
 

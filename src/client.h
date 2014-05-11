@@ -1,3 +1,9 @@
+/**
+@author Martin Vlacil - xvlaci00@stud.fit.vutbr.cz
+@author Jan Sedo      - xsedoj00@stud.fit.vutbr.cz
+*/
+
+
 #ifndef CLIENT_H
 #define CLIENT_H
 
@@ -5,6 +11,9 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+
+
+
 #include <boost/thread.hpp>
 #include <pthread.h>
 #include <time.h>

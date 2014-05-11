@@ -1,12 +1,10 @@
-//
-// server.cpp
-// ~~~~~~~~~~
-//
-// Copyright (c) 2003-2010 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
+/**
+@author Martin Vlacil - xvlaci00@stud.fit.vutbr.cz
+@author Jan Sedo      - xsedoj00@stud.fit.vutbr.cz
+*/
+
+#ifndef SERVER_H
+#define SERVER_H
 
 #include <algorithm>
 #include <cstdlib>
@@ -242,6 +240,8 @@ private:
   channel channel_;
 };
 
+
+#endif // SERVER_H
 
 
 
