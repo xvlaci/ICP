@@ -11,10 +11,10 @@ using boost::asio::ip::tcp;
 class client
 {
 public:
-    client(boost::asio::io_service& io_service)
+    client(boost::asio::io_service& io_service, std::string ip, std::string port)
         : io_service_(io_service),
           resolver_(io_service),
-          query_(tcp::v4(), "127.0.0.1", "2345"),
+          query_(tcp::v4(), ip, port),
           socket_(io_service)
     {
         iterator_ = resolver_.resolve(query_);

@@ -21,6 +21,7 @@ SOURCES += main.cpp\
     board.cpp \
     serverwindow.cpp \
     clientwindow.cpp \
+    connectdialog.cpp \
     controller.cpp
 
 
@@ -32,11 +33,13 @@ HEADERS  += mainwindow.h \
     board.h\
     serverwindow.h \
     clientwindow.h \
+    connectdialog.h \
     controller.h
 
 FORMS    += mainwindow.ui\
     serverwindow.ui \
-    clientwindow.ui
+    clientwindow.ui \
+    connectdialog.ui
 
 LIBS    += -lboost_system \
            -pthread

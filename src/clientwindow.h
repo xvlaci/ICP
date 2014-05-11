@@ -7,6 +7,9 @@
 #include <boost/asio.hpp>
 
 #include <QWidget>
+#include <QtCore>
+#include <QtGui>
+#include <QGraphicsScene>
 
 #include "client.h"
 
@@ -26,6 +29,9 @@ private:
     Ui::ClientWindow *ui;
     client *my_client;
     boost::asio::io_service io_service;
+    QGraphicsScene *scene;
+
+    void repaint(std::string board_state);
 
 
 private slots:
@@ -33,6 +39,7 @@ private slots:
 
 
 
+    void on_connectButton_clicked();
 };
 
 #endif // CLIENTWINDOW_H
