@@ -4,6 +4,7 @@
 #include "connectdialog.h"
 
 #include <iostream>
+#include <fstream>
 #include <boost/lexical_cast.hpp>
 
 ClientWindow::ClientWindow(QWidget *parent) :
@@ -19,15 +20,29 @@ ClientWindow::ClientWindow(QWidget *parent) :
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
 
+    /* zkusebni mapa - v normalnim pripade prijde od serveru */
+    std::string string;
 
-    std::string message("8\n5\n11111111\n10000001\n10011001\n10000001\n11111111\n");
-    this->repaint(message);
+    std::ifstream f;
+    f.open("zkusebni_mapa");
+    if (f.is_open()) {
+        getline( f, string, '\0');
+    }
+    f.close();
+
+    this->repaint(string);
 
 }
 
 ClientWindow::~ClientWindow()
 {
     delete ui;
+}
+
+void * ClientWindow::newMapState(void *threadid)
+{
+    my_client = new client(io_service, server, port);
+
 }
 
 void ClientWindow::repaint(std::string board_state)
@@ -51,9 +66,9 @@ void ClientWindow::repaint(std::string board_state)
     }
 
     char c;
-    for (int y = 0; y < height*50; y+=50)
+    for (int y = 0; y < height*20; y+=20)
     {
-        for (int x = 0; x < width*50; x+=50)
+        for (int x = 0; x < width*20; x+=20)
         {
             c = stream.get();
             if ( c == 10 )
@@ -61,9 +76,98 @@ void ClientWindow::repaint(std::string board_state)
                 c = stream.get();
             }
 
-            if (c == '1')
+            if (c == '1') /* draw walls */
             {
-                scene->addRect(x+5,y+5,40,40,QPen(Qt::gray),QBrush(Qt::gray));
+                scene->addRect(x+5,y+5,15,15,QPen(Qt::gray),QBrush(Qt::gray));
+            }
+            if (c == '2') /* draw gates */
+            {
+                scene->addLine(x+5,y+5,x+20,y+5,QPen(Qt::black));
+                scene->addLine(x+5,y+13,x+20,y+13,QPen(Qt::black));
+                scene->addLine(x+5,y+20,x+20,y+20,QPen(Qt::black));
+
+                scene->addLine(x+5,y+5,x+5,y+20,QPen(Qt::black));
+                scene->addLine(x+13,y+5,x+13,y+20,QPen(Qt::black));
+                scene->addLine(x+20,y+5,x+20,y+20,QPen(Qt::black));
+            }
+            if (c == '3') /* draw keys */
+            {
+                scene->addEllipse(x+8,y+5,8,8,QPen(Qt::darkYellow));
+                scene->addLine(x+12,y+13,x+12,y+20,QPen(Qt::darkYellow));
+                scene->addLine(x+12,y+18,x+14,y+18,QPen(Qt::darkYellow));
+                scene->addLine(x+12,y+20,x+15,y+20,QPen(Qt::darkYellow));
+            }
+            if (c == 'a') /* guard looking up */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+5));
+                polygon.append(QPoint(x+15,y+20));
+                polygon.append(QPoint (x+5,y+20));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
+
+            }
+            if (c == 'b') /* guard looking right */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+5,y+5));
+                polygon.append(QPoint(x+20,y+10));
+                polygon.append(QPoint (x+5,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
+
+            }
+            if (c == 'c') /* guard looking down */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+20));
+                polygon.append(QPoint(x+15,y+5));
+                polygon.append(QPoint (x+5,y+5));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
+
+            }
+            if (c == 'd') /* guard looking left */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+20,y+5));
+                polygon.append(QPoint(x+5,y+10));
+                polygon.append(QPoint (x+20,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
+
+            }
+            if (c == 'e') /* player looking up */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+5));
+                polygon.append(QPoint(x+15,y+20));
+                polygon.append(QPoint (x+5,y+20));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
+
+            }
+            if (c == 'f') /* player looking right */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+5,y+5));
+                polygon.append(QPoint(x+20,y+10));
+                polygon.append(QPoint (x+5,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
+
+            }
+            if (c == 'g') /* player looking down */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+20));
+                polygon.append(QPoint(x+15,y+5));
+                polygon.append(QPoint (x+5,y+5));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
+
+            }
+            if (c == 'h') /* player looking left */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+20,y+5));
+                polygon.append(QPoint(x+5,y+10));
+                polygon.append(QPoint (x+20,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
+
             }
         }
 
@@ -73,8 +177,18 @@ void ClientWindow::repaint(std::string board_state)
 
 void ClientWindow::start_connection()
 {
-    my_client = new client(io_service, server, port);
+    void * i;
+    int rc = pthread_create(&this->thread, NULL, ClientWindow::JHWrapper, static_cast<void *>(i));
 
+<<<<<<< HEAD
+
+=======
+    if (rc){
+        std::cout << "Error:unable to create thread," << rc << std::endl;
+        exit(-1);
+    }
+    //pthread_exit(NULL);
+>>>>>>> 69c2fa08400d291c51fa9266b2838d963c39f79b
     /* if connected */
     ui->disconnectButton->setDisabled(false);
     ui->lineEdit->setDisabled(false);
@@ -92,8 +206,6 @@ void ClientWindow::returnPressed()
     QString qrequest = ui->lineEdit->text();
     std::string request = qrequest.toStdString();
     ui->lineEdit->clear();
-
-    scene->clear();
 
     my_client->send(request);
 }
