@@ -156,13 +156,13 @@ std::string tcp_session::clientMsgHandler()
     }
     else if(msg.find(":::LOAD:::") == 1 && (msg[0] - '0') == 0){
         server::getInstance()->waitin_time_ = msg[11] - '0';
-        std::cout << msg[10] - '0';
+
+
         //server::getInstance()->loadMap("prd");
     }
     else if(msg.find(":::SAVE:::") == 1){
         Controller* c = server::getInstance()->getCont();
-        std::cout << msg.substr(11, msg.length() - 10) << std::endl;
-        //c->save(msg.substr(11, msg.length() - 10));
+        c->save(msg.substr(11, msg.length() - 10));
     }
     else{
         int id_end = msg.find(":::");
