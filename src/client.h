@@ -3,8 +3,12 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+#include <pthread.h>
+#include <time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -19,6 +23,20 @@ public:
     {
         iterator_ = resolver_.resolve(query_);
         client_init();
+
+
+
+        void * i;
+        int rc = pthread_create(&this->thread, NULL, client::JHWrapper, static_cast<void *>(i));
+
+        if (rc){
+            std::cout << "Error:unable to create thread," << rc << std::endl;
+            exit(-1);
+        }
+        //pthread_exit(NULL);
+
+
+
     }
 
     void client_connect();
@@ -31,13 +49,21 @@ public:
     void send(std::string s);
 
 private:
+    static void * JHWrapper(void *self){
+       client *that = static_cast<client*>(self);
+       return that->newMapState(self);
+    }
+
+
     boost::asio::io_service& io_service_;
     tcp::resolver resolver_;
     tcp::resolver::query query_;
     tcp::resolver::iterator iterator_;
     tcp::socket socket_;
     char client_id;
+    pthread_t thread;
     void client_init();
+    void * newMapState(void *threadid);
 };
 
 /*class tcp_server

@@ -7,12 +7,23 @@ void client::client_connect()
     boost::asio::connect(socket_, iterator_);
 }
 
+
+void * client::newMapState(void *threadid)
+{
+    //while(true){
+        sleep(1);
+        std::cout << "Hello" << std::endl;
+        using boost::asio::ip::tcp;
+
+
+}
+
 void client::client_init()
 {
     using boost::asio::ip::tcp;
 
     try
-      {
+        {
 
         std::string message("new\n");
         this->client_connect();
@@ -34,7 +45,7 @@ void client::client_init()
       catch (std::exception& e)
       {
         std::cerr << "Exception: " << e.what() << "\n";
-      }
+      }    
 }
 
 void client::send(std::string s){

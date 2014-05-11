@@ -192,11 +192,13 @@ public:
 
   void loadMap(std::string s);
 
-  void setPlayer(int id, Square * s, bool alive, bool go);
+  void setPlayer(int id, Square * s, bool go);
+
+  std::string newMap(int id);
+
 
 
 private:
-
   server(boost::asio::io_service& io_service,
       const tcp::endpoint& listen_endpoint)
     : io_service_(io_service),
@@ -226,6 +228,7 @@ private:
   Controller * cont;
   Board * b;
   std::string map_new_state;
+
 
   static server* m_pInstance;
   int clients_cnt;

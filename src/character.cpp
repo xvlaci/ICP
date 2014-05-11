@@ -4,6 +4,7 @@ Character::Character(bool player, int direction){
     this->key = false;
     this->player = player;
     this->direction = direction;
+    this->alive = false;
 }
 
 bool Character::hasKey(){

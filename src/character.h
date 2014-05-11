@@ -23,6 +23,8 @@ public:
     bool isPlayer();
     void turn(int side);
     int facing();
+
+    bool alive;
 };
 
 #endif // CHARACTER_H

@@ -202,6 +202,18 @@ std::string tcp_session::clientMsgHandler(){
                 {
                     clientCommandHandler(server::getInstance()->getPlayer(id_cl), msg);
                 }
+                if(msg.find(":::NEWSTATE:::") == 1)
+                {
+                    /*if(server::getInstance()->getPlayer(id_cl).waitin){
+                        return server::getInsatnce()->newMap(id_cl);
+                        return "Nova mapa";
+                    }
+                    else
+                        return "DENIED";
+                    */
+
+                    return "Denied";
+                }
             }
         }
     }
@@ -218,39 +230,39 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
     if(player.turn)
         return;
 
+
+
     if(command.find(":::GO:::") == 11){
         std::cout << "Jdu dopredu!!" << std::endl;
-        player.go = true;
-        server::getInstance()->setPlayer(player.id, cont->move(player.position), player.alive, true);
+        server::getInstance()->setPlayer(player.id, cont->move(player.position), true);
     }
     else if(command.find(":::STOP:::") == 11){
         std::cout << "Stojim!!" << std::endl;
-        player.go = false;
-        server::getInstance()->setPlayer(player.id, player.position, player.alive, false);
+        server::getInstance()->setPlayer(player.id, player.position, false);
     }
     else if(command.find(":::LEFT:::") == 11){
         std::cout << "Otacim se vlevo!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, LEFT), player.alive, player.go);
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, LEFT), player.go);
     }
     else if(command.find(":::RIGHT:::") == 11){
         std::cout << "Otacim se vpravo!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, RIGHT), player.alive, player.go);
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, RIGHT), player.go);
     }
     else if(command.find(":::DOWN:::") == 11){
         std::cout << "Otacim se dolu!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, DOWN), player.alive, player.go);
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, DOWN), player.go);
     }
     else if(command.find(":::UP:::") == 11){
         std::cout << "Otacim se nahoru!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, UP), player.alive, player.go);
+        server::getInstance()->setPlayer(player.id, cont->turn(player.position, UP), player.go);
     }
     else if(command.find(":::PICK:::") == 11){
         std::cout << "Zvedam klic" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->pickUpKey(player.position), player.alive, false);
+        server::getInstance()->setPlayer(player.id, cont->pickUpKey(player.position), false);
     }
     else if(command.find(":::OPEN:::") == 11){
         std::cout << "Oteviram branu" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->openGate(player.position), player.alive, false);
+        server::getInstance()->setPlayer(player.id, cont->openGate(player.position), false);
     }
     else{}
 
@@ -381,8 +393,6 @@ void server::loadMap(std::string s){
         this->m_pInstance->PLAYERS[i].go = false;
     }
 
-
-    int i;
     int rc = pthread_create(&this->m_pInstance->thread, NULL, server::JHWrapper, static_cast<void *>(m_pInstance));
 
     if (rc){
@@ -391,10 +401,15 @@ void server::loadMap(std::string s){
     }
 }
 
+std::string server::newMap(int id){
+    this->m_pInstance->PLAYERS[id].waitin = false;
+    return this->m_pInstance->map_new_state;
+}
+
 void server::move(){
     for(int i = 0; i < 4; i++){
         if(!this->m_pInstance->PLAYERS[i].turn && this->m_pInstance->PLAYERS[i].go){
-            this->m_pInstance->setPlayer(i, this->m_pInstance->cont->move(this->m_pInstance->PLAYERS[i].position), true, true);
+            this->m_pInstance->setPlayer(i, this->m_pInstance->cont->move(this->m_pInstance->PLAYERS[i].position), true);
         }
         this->m_pInstance->PLAYERS[i].turn = false;
         this->m_pInstance->PLAYERS[i].waitin = true;
@@ -405,7 +420,11 @@ void server::move(){
     this->m_pInstance->cont->moveGuard();
 }
 
-void server::setPlayer(int id, Square * s, bool alive, bool go){
+void server::setPlayer(int id, Square * s, bool go){
+    std::cout << "Tady este jo" << std::endl;
+
+    //this->m_pInstance->PLAYERS[id].position->getCharacter()->alive = true;
+
     this->m_pInstance->PLAYERS[id].position = s;
     if(s == 0)
         this->m_pInstance->PLAYERS[id].alive = false;

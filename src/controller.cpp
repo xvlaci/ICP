@@ -122,7 +122,7 @@ void Controller::moveGuard(){
                 Square * new_s = this->b->getSquare(new_x, new_y);
 
                 if(new_s->getObjectType() == EMPTY || \
-                   new_s->getObjectType() == PLAYER){
+                   (new_s->getObjectType() == PLAYER && new_s->getCharacter()->alive)){
                     tries = 0;
                     new_s->setCharacter(guard->getCharacter());
                     new_s->setObjectType(GUARD);
