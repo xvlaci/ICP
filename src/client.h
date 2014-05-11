@@ -25,19 +25,6 @@ public:
         client_init();
     }
 
-    void newFuckingThread(){
-        void * i;
-        int rc = pthread_create(&this->thread, NULL, client::JHWrapper, static_cast<void *>(i));
-
-        if (rc){
-            std::cout << "Error:unable to create thread," << rc << std::endl;
-            exit(-1);
-        }
-        //pthread_exit(NULL);
-
-
-    }
-
     void client_connect();
 
     tcp::socket& socket()
@@ -48,11 +35,8 @@ public:
     void send(std::string s);
 
 private:
-    static void * JHWrapper(void *self){
-       client *that = static_cast<client*>(self);
-       return that->newMapState(self);
-    }
 
+    void client_init();
 
     boost::asio::io_service& io_service_;
     tcp::resolver resolver_;
@@ -60,40 +44,6 @@ private:
     tcp::resolver::iterator iterator_;
     tcp::socket socket_;
     char client_id;
-    pthread_t thread;
-    void client_init();
-    void * newMapState(void *threadid);
 };
-
-/*class tcp_server
-{
-public:
-  tcp_server(boost::asio::io_service& io_service, short port)
-    : io_service_(io_service),
-      acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
-  {
-    init_counter();
-    start_accept();
-  }
-
-private:
-  void init_counter();
-  void start_accept();
-
-  void handle_accept(session* new_session,
-      const boost::system::error_code& error);
-
-  boost::asio::io_service& io_service_;
-  tcp::acceptor acceptor_;
-  int connection_counter;
-};
-
-#endif // CLIENT_H
-
-tcp::resolver::query query(tcp::v4(), "127.0.0.1", "2345");
-tcp::resolver::iterator iterator = resolver.resolve(query);
-
-tcp::socket s(io_service);
-boost::asio::connect(s, iterator);*/
 
 #endif // CLIENT_H

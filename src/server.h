@@ -196,7 +196,7 @@ public:
 
   std::string newMap(int id);
 
-
+  int waitin_time_;
 
 private:
   server(boost::asio::io_service& io_service,

@@ -37,14 +37,6 @@ private:
     boost::asio::io_service io_service;
     QGraphicsScene *scene;
 
-    static void * JHWrapper(void *self){
-       ClientWindow *that = static_cast<ClientWindow*>(self);
-       return that->newMapState(self);
-    }
-
-    void * newMapState(void *threadid);
-
-    pthread_t thread;
     std::string server;
     std::string port;
 

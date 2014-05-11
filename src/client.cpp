@@ -7,12 +7,6 @@ void client::client_connect()
     boost::asio::connect(socket_, iterator_);
 }
 
-
-void * client::newMapState(void *threadid)
-{
-
-}
-
 void client::client_init()
 {
     using boost::asio::ip::tcp;
@@ -54,29 +48,33 @@ void client::send(std::string s){
         message += client_id;
         message += ":::";
         if(s == "go")
-            s = "COMMAND:::GO:::";
+            message += "COMMAND:::GO:::";
         else if (s == "stop")
-            s = "COMMAND:::STOP:::";
+            message += "COMMAND:::STOP:::";
         else if (s == "left")
-            s = "COMMAND:::LEFT:::";
+            message += "COMMAND:::LEFT:::";
         else if (s == "right")
-            s = "COMMAND:::RIGHT:::";
+            message += "COMMAND:::RIGHT:::";
         else if (s == "down")
-            s = "COMMAND:::DOWN:::";
+            message += "COMMAND:::DOWN:::";
         else if (s == "up")
-            s = "COMMAND:::UP:::";
+            message += "COMMAND:::UP:::";
         else if (s == "pick")
-            s = "COMMAND:::PICK:::";
+            message += "COMMAND:::PICK:::";
         else if (s == "open")
-            s = "COMMAND:::OPEN:::";
-        else if (s == "load")
-            s = "LOAD:::";
+            message += "COMMAND:::OPEN:::";
+        else if (s.find("load") == 0){
+            message += "LOAD:::";
+            message += s[5];
+        }
+        else if (s.find("save") == 0){
+            message += "SAVE:::";
+            message += s.substr(5,s.length()-4);
+        }
 
-
-
-                    ;
-        message += s;
         message += "\n";
+
+        std::cout << message << std::endl;
 
         this->client_connect();
         using namespace std;
