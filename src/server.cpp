@@ -386,7 +386,7 @@ Board * server::getBoard()
 void server::loadMap(std::string s)
 {
     using namespace boost;
-    s.append(".map");
+
     srand(time(NULL));
 
     this->m_pInstance->cont = new Controller();

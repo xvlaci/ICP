@@ -328,9 +328,19 @@ void ClientWindow::start_connection()
 
         std::string tempmap = sDialog.getMap();
         std::string temptime = sDialog.getTime();
+        std::string tmp = "mapp ";
+        tmp += temptime;
+        tmp += " ";
+        tmp += tempmap;
 
-        std::cout << "Selected map is: " << tempmap << std::endl;
-        std::cout << "Selected time is: " << temptime << std::endl;
+        my_client->send(tmp);
+
+        if(my_client->state_[0] != 'q')
+        {
+            repaint(my_client->state_);
+        }
+        //std::cout << "Selected map is: " << tempmap << std::endl;
+        //std::cout << "Selected time is: " << temptime << std::endl;
 
     }
     else
