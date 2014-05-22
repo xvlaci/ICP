@@ -294,21 +294,7 @@ void ClientWindow::repaint(std::string board_state)
 
 void ClientWindow::start_connection()
 {
-    my_client = new client(io_service, server, port);
 
-    if (my_client->is_connected == true)
-    {
-        ui->disconnectButton->setDisabled(false);
-        ui->lineEdit->setDisabled(false);
-    }
-    else
-    {
-        QMessageBox::critical(
-            this,
-            tr("Error"),
-            tr("Could not connect to server.") );
-
-    }
 
     me = this;
 
@@ -318,6 +304,31 @@ void ClientWindow::start_connection()
     if (rc){
         std::cout << "Error:unable to create thread," << rc << std::endl;
         exit(-1);
+    }
+
+    my_client = new client(io_service, server, port);
+
+    if (my_client->is_connected == true)
+    {
+        ui->disconnectButton->setDisabled(false);
+        ui->lineEdit->setDisabled(false);
+
+        QMessageBox::information(
+            this,
+            tr("Vyber mapy"),
+            tr("Connected. Tady by mel byt vyber mapy.") );
+
+
+
+
+    }
+    else
+    {
+        QMessageBox::critical(
+            this,
+            tr("Error"),
+            tr("Could not connect to server.") );
+
     }
 
 
