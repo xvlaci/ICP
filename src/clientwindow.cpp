@@ -77,12 +77,14 @@ void ClientWindow::repaint(std::string board_state)
                 c = stream.get();
             }
 
-            if (c == '1') /* draw walls */
+            switch (c)
             {
+
+            case '1':  /* draw wall */
                 scene->addRect(x+5,y+5,15,15,QPen(Qt::gray),QBrush(Qt::gray));
-            }
-            if (c == '2') /* draw gates */
-            {
+                break;
+
+            case '2': /* draw gate */
                 scene->addLine(x+5,y+5,x+20,y+5,QPen(Qt::black));
                 scene->addLine(x+5,y+13,x+20,y+13,QPen(Qt::black));
                 scene->addLine(x+5,y+20,x+20,y+20,QPen(Qt::black));
@@ -90,84 +92,206 @@ void ClientWindow::repaint(std::string board_state)
                 scene->addLine(x+5,y+5,x+5,y+20,QPen(Qt::black));
                 scene->addLine(x+13,y+5,x+13,y+20,QPen(Qt::black));
                 scene->addLine(x+20,y+5,x+20,y+20,QPen(Qt::black));
-            }
-            if (c == '3') /* draw keys */
-            {
+                break;
+
+            case '3': /* draw key */
                 scene->addEllipse(x+8,y+5,8,8,QPen(Qt::darkYellow));
                 scene->addLine(x+12,y+13,x+12,y+20,QPen(Qt::darkYellow));
                 scene->addLine(x+12,y+18,x+14,y+18,QPen(Qt::darkYellow));
                 scene->addLine(x+12,y+20,x+15,y+20,QPen(Qt::darkYellow));
-            }
-            if (c == 'a') /* guard looking up */
+                break;
+
+            case 'a': /* guard looking up */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+10,y+5));
                 polygon.append(QPoint(x+15,y+20));
                 polygon.append(QPoint (x+5,y+20));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
-
+                break;
             }
-            if (c == 'b') /* guard looking right */
+
+            case 'b': /* guard looking right */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+5,y+5));
                 polygon.append(QPoint(x+20,y+10));
                 polygon.append(QPoint (x+5,y+15));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
-
+                break;
             }
-            if (c == 'c') /* guard looking down */
+            case 'c': /* guard looking down */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+10,y+20));
                 polygon.append(QPoint(x+15,y+5));
                 polygon.append(QPoint (x+5,y+5));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
-
+                break;
             }
-            if (c == 'd') /* guard looking left */
+            case 'd': /* guard looking left */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+20,y+5));
                 polygon.append(QPoint(x+5,y+10));
                 polygon.append(QPoint (x+20,y+15));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
-
+                break;
             }
-            if (c == 'e') /* player looking up */
+            case 'e': /* player 1 looking up */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+10,y+5));
                 polygon.append(QPoint(x+15,y+20));
                 polygon.append(QPoint (x+5,y+20));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
-
+                break;
             }
-            if (c == 'f') /* player looking right */
+            case 'f': /* player 1 looking right */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+5,y+5));
                 polygon.append(QPoint(x+20,y+10));
                 polygon.append(QPoint (x+5,y+15));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
-
+                break;
             }
-            if (c == 'g') /* player looking down */
+            case 'g': /* player 1 looking down */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+10,y+20));
                 polygon.append(QPoint(x+15,y+5));
                 polygon.append(QPoint (x+5,y+5));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
-
+                break;
             }
-            if (c == 'h') /* player looking left */
+            case 'h': /* player 1 looking left */
             {
                 QPolygon polygon;
                 polygon.append(QPoint(x+20,y+5));
                 polygon.append(QPoint(x+5,y+10));
                 polygon.append(QPoint (x+20,y+15));
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::green));
+                break;
+            }
+
+            case 'i': /* player 2 looking up */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+5));
+                polygon.append(QPoint(x+15,y+20));
+                polygon.append(QPoint (x+5,y+20));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                break;
+            }
+            case 'j': /* player 2 looking right */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+5,y+5));
+                polygon.append(QPoint(x+20,y+10));
+                polygon.append(QPoint (x+5,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                break;
+            }
+            case 'k': /* player 2 looking down */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+20));
+                polygon.append(QPoint(x+15,y+5));
+                polygon.append(QPoint (x+5,y+5));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                break;
+            }
+            case 'l': /* player 2 looking left */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+20,y+5));
+                polygon.append(QPoint(x+5,y+10));
+                polygon.append(QPoint (x+20,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                break;
+            }
+
+            case 'm': /* player 3 looking up */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+5));
+                polygon.append(QPoint(x+15,y+20));
+                polygon.append(QPoint (x+5,y+20));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkYellow));
+                break;
+            }
+            case 'n': /* player 3 looking right */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+5,y+5));
+                polygon.append(QPoint(x+20,y+10));
+                polygon.append(QPoint (x+5,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkYellow));
+                break;
+            }
+            case 'o': /* player 3 looking down */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+20));
+                polygon.append(QPoint(x+15,y+5));
+                polygon.append(QPoint (x+5,y+5));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkYellow));
+                break;
+            }
+            case 'p': /* player 3 looking left */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+20,y+5));
+                polygon.append(QPoint(x+5,y+10));
+                polygon.append(QPoint (x+20,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkYellow));
+                break;
+            }
+
+            case 'q': /* player 4 looking up */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+5));
+                polygon.append(QPoint(x+15,y+20));
+                polygon.append(QPoint (x+5,y+20));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkGreen));
+                break;
+            }
+            case 'r': /* player 4 looking right */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+5,y+5));
+                polygon.append(QPoint(x+20,y+10));
+                polygon.append(QPoint (x+5,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkGreen));
+                break;
+            }
+            case 's': /* player 4 looking down */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+10,y+20));
+                polygon.append(QPoint(x+15,y+5));
+                polygon.append(QPoint (x+5,y+5));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkGreen));
+                break;
+            }
+            case 't': /* player 4 looking left */
+            {
+                QPolygon polygon;
+                polygon.append(QPoint(x+20,y+5));
+                polygon.append(QPoint(x+5,y+10));
+                polygon.append(QPoint (x+20,y+15));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkGreen));
+                break;
+            }
+
+
+
+
+
+
+
 
             }
         }
