@@ -326,6 +326,12 @@ void ClientWindow::start_connection()
         sDialog.fillMapDialog(my_client->getLoads());
         sDialog.exec();
 
+        std::string tempmap = sDialog.getMap();
+        std::string temptime = sDialog.getTime();
+
+        std::cout << "Selected map is: " << tempmap << std::endl;
+        std::cout << "Selected time is: " << temptime << std::endl;
+
     }
     else
     {

@@ -27,3 +27,20 @@ void SelectMapDialog::fillMapDialog(std::string maps)
         }
 
 }
+
+std::string SelectMapDialog::getMap()
+{
+    selected_map = ui->listWidget->currentItem()->text().toStdString();
+    return selected_map;
+}
+
+std::string SelectMapDialog::getTime()
+{
+    time = ui->lineEdit->text().toStdString();
+    return time;
+}
+
+void SelectMapDialog::on_selectButton_clicked()
+{
+    this->done(1);
+}

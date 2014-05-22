@@ -21,10 +21,17 @@ public:
 private:
     Ui::SelectMapDialog *ui;
 
+    std::string time;
+    std::string selected_map;
+
 public slots:
     void fillMapDialog(std::string maps);
+    std::string getMap();
+    std::string getTime();
 
 
+private slots:
+    void on_selectButton_clicked();
 };
 
 #endif // SELECTMAPDIALOG_H
