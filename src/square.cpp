@@ -13,9 +13,10 @@ Square::Square(int x, int y, int object_type)
     this->object_type = object_type;
     object_type += '0';
 
-    if(object_type >= 'e' && object_type <= 'h'){
+    if(object_type >= 'e' && object_type <= 't'){
         this->object_type = PLAYER;
-        this->character = new Character(true, object_type - 'e');
+        this->character = new Character(true, (object_type - 'e')%4);
+        this->character->setColor((object_type - 'e')/4);
     }
 
     if(object_type >= 'a' && object_type <= 'd'){

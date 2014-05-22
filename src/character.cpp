@@ -11,6 +11,7 @@ Character::Character(bool player, int direction){
     this->player = player;
     this->direction = direction;
     this->alive = false;
+    this->color = 0;
 }
 
 bool Character::hasKey(){
@@ -35,4 +36,12 @@ void Character::turn(int side){
 
 int Character::facing(){
     return this->direction;
+}
+
+int Character::getColor(){
+    return this->color;
+}
+
+void Character::setColor(int color){
+    this->color = color;
 }
