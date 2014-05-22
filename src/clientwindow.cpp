@@ -13,6 +13,7 @@
 #include <fstream>
 #include <boost/lexical_cast.hpp>
 
+
 ClientWindow::ClientWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ClientWindow)
@@ -25,18 +26,6 @@ ClientWindow::ClientWindow(QWidget *parent) :
 
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
-
-    /* zkusebni mapa - v normalnim pripade prijde od serveru */
-    std::string string;
-
-    std::ifstream f;
-    f.open("zkusebni_mapa");
-    if (f.is_open()) {
-        getline( f, string, '\0');
-    }
-    f.close();
-
-    this->repaint(string);
 
 }
 
@@ -138,6 +127,7 @@ void ClientWindow::repaint(std::string board_state)
                 scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::red));
                 break;
             }
+
             case 'e': /* player 1 looking up */
             {
                 QPolygon polygon;
@@ -181,7 +171,7 @@ void ClientWindow::repaint(std::string board_state)
                 polygon.append(QPoint(x+10,y+5));
                 polygon.append(QPoint(x+15,y+20));
                 polygon.append(QPoint (x+5,y+20));
-                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkMagenta));
                 break;
             }
             case 'j': /* player 2 looking right */
@@ -190,7 +180,7 @@ void ClientWindow::repaint(std::string board_state)
                 polygon.append(QPoint(x+5,y+5));
                 polygon.append(QPoint(x+20,y+10));
                 polygon.append(QPoint (x+5,y+15));
-                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkMagenta));
                 break;
             }
             case 'k': /* player 2 looking down */
@@ -199,7 +189,7 @@ void ClientWindow::repaint(std::string board_state)
                 polygon.append(QPoint(x+10,y+20));
                 polygon.append(QPoint(x+15,y+5));
                 polygon.append(QPoint (x+5,y+5));
-                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkMagenta));
                 break;
             }
             case 'l': /* player 2 looking left */
@@ -208,7 +198,7 @@ void ClientWindow::repaint(std::string board_state)
                 polygon.append(QPoint(x+20,y+5));
                 polygon.append(QPoint(x+5,y+10));
                 polygon.append(QPoint (x+20,y+15));
-                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::magenta));
+                scene->addPolygon(polygon,QPen(Qt::red),QBrush(Qt::darkMagenta));
                 break;
             }
 
@@ -304,6 +294,20 @@ void ClientWindow::start_connection()
 {
     my_client = new client(io_service, server, port);
 
+    if (my_client->is_connected == true)
+    {
+        ui->disconnectButton->setDisabled(false);
+        ui->lineEdit->setDisabled(false);
+    }
+    else
+    {
+        QMessageBox::critical(
+            this,
+            tr("Error"),
+            tr("Could not connect to server.") );
+
+    }
+
     me = this;
 
     void *i;
@@ -314,14 +318,7 @@ void ClientWindow::start_connection()
         exit(-1);
     }
 
-    /* if connected */
-    ui->disconnectButton->setDisabled(false);
-    ui->lineEdit->setDisabled(false);
 
-    /* else */
-    /* popup ze se nepodarilo pripojit */
-
-    /* todo: udelat funkcni disconnect tlacitko */
 
 
 }
@@ -359,4 +356,13 @@ void ClientWindow::on_connectButton_clicked()
 
 
 
+}
+
+void ClientWindow::on_disconnectButton_clicked()
+{
+    /* a zrusit klienta asik */
+
+    scene->clear();
+    ui->disconnectButton->setDisabled(true);
+    ui->lineEdit->setDisabled(true);
 }

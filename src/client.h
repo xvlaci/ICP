@@ -30,6 +30,7 @@ public:
           query_(tcp::v4(), ip, port),
           socket_(io_service)
     {
+        is_connected = false;
         iterator_ = resolver_.resolve(query_);
         client_init();
         state_[0] = 'q';
@@ -50,6 +51,10 @@ public:
 
     char state_[2550];
     char tmp_state[2550];
+
+        bool is_connected;
+
+
 private:
 
     void client_init();
@@ -60,6 +65,8 @@ private:
     tcp::resolver::iterator iterator_;
     tcp::socket socket_;
     char client_id;
+
+
 
 };
 

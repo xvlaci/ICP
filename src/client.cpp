@@ -31,11 +31,13 @@ void client::client_init()
 
 
         client_id = reply[0];
+        is_connected = true;
 
 
       }
       catch (std::exception& e)
       {
+        is_connected = false;
         std::cerr << "Exception: " << e.what() << "\n";
       }    
 }

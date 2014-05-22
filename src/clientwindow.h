@@ -16,6 +16,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QGraphicsScene>
+#include <QMessageBox>
 
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
@@ -85,6 +86,7 @@ private slots:
 
 
 
+    void on_disconnectButton_clicked();
 };
 
 #endif // CLIENTWINDOW_H
