@@ -121,7 +121,7 @@ private:
 
   std::string clientMsgHandler();
 
-  void clientCommandHandler(Player player, std::string command);
+  bool clientCommandHandler(Player player, std::string command);
 
   void handle_write(const boost::system::error_code& ec);
 
