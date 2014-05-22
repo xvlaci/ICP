@@ -8,39 +8,26 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = bludiste2014
+TARGET = bludiste2014_cli
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES += main_cli.cpp\
     server.cpp \
     client.cpp \
     character.cpp \
     square.cpp \
     board.cpp \
-    serverwindow.cpp \
-    clientwindow.cpp \
-    connectdialog.cpp \
     controller.cpp
 
 
-HEADERS  += mainwindow.h \
-    server.h \
+HEADERS  += server.h \
     client.h \
     character.h \
     square.h \
     board.h\
-    serverwindow.h \
-    clientwindow.h \
-    connectdialog.h \
     controller.h \
     client_ask.h
-
-FORMS    += mainwindow.ui\
-    serverwindow.ui \
-    clientwindow.ui \
-    connectdialog.ui
 
 LIBS    += -lboost_system \
            -lboost_thread-mt \
