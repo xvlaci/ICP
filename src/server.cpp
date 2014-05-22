@@ -239,6 +239,7 @@ std::string tcp_session::clientMsgHandler()
 }
 
 void tcp_session::clientCommandHandler(Player player, std::string command){
+    bool alive;
 
     Controller * cont = server::getInstance()->getCont();
     Board * b = server::getInstance()->getBoard();
@@ -248,23 +249,23 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
 
     if(command.find(":::GO:::") == 11){
         //std::cout << "Jdu dopredu!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->move(player.position), true);
+        alive = server::getInstance()->setPlayer(player.id, cont->move(player.position), true);
     }
     else if(command.find(":::STOP:::") == 11){
         //std::cout << "Stojim!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, player.position, false);
+        alive = server::getInstance()->setPlayer(player.id, player.position, false);
     }
     else if(command.find(":::LEFT:::") == 11){
         //std::cout << "Otacim se vlevo!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, LEFT), player.go);
+        alive = server::getInstance()->setPlayer(player.id, cont->turn(player.position, LEFT), player.go);
     }
     else if(command.find(":::RIGHT:::") == 11){
         //std::cout << "Otacim se vpravo!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, RIGHT), player.go);
+        alive = server::getInstance()->setPlayer(player.id, cont->turn(player.position, RIGHT), player.go);
     }
     else if(command.find(":::DOWN:::") == 11){
         //std::cout << "Otacim se dolu!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, DOWN), player.go);
+        alive = server::getInstance()->setPlayer(player.id, cont->turn(player.position, DOWN), player.go);
     }
     else if(command.find(":::UP:::") == 11){
         //std::cout << "Otacim se nahoru!!" << std::endl;
@@ -435,17 +436,19 @@ void server::move()
     this->m_pInstance->cont->moveGuard();
 }
 
-void server::setPlayer(int id, Square * s, bool go)
+bool server::setPlayer(int id, Square * s, bool go)
 {
     //this->m_pInstance->PLAYERS[id].position->getCharacter()->alive = true;
 
     this->m_pInstance->PLAYERS[id].position = s;
     if(s == 0)
-        this->m_pInstance->PLAYERS[id].alive = false;
+        return (this->m_pInstance->PLAYERS[id].alive = false);
     else
         this->m_pInstance->PLAYERS[id].alive = true;
     this->m_pInstance->PLAYERS[id].go = go;
     this->m_pInstance->PLAYERS[id].turn = true;
+
+    return true;
 }
 
 

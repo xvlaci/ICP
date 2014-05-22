@@ -332,6 +332,9 @@ void ClientWindow::returnPressed()
     ui->lineEdit->clear();
 
     my_client->send(request);
+    if(request == "load"){
+        std::cout << my_client->getLoads() << std::endl;
+    }
     if(my_client->state_[0] != 'q')
     {
         repaint(my_client->state_);

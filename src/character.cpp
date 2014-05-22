@@ -12,6 +12,7 @@ Character::Character(bool player, int direction){
     this->direction = direction;
     this->alive = false;
     this->color = 0;
+    this->living = true;
 }
 
 

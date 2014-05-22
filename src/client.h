@@ -34,6 +34,7 @@ public:
         iterator_ = resolver_.resolve(query_);
         client_init();
         state_[0] = 'q';
+        loads[0] = 'q';
     }
 
     void client_connect();
@@ -47,11 +48,16 @@ public:
         return this->state_;
     }
 
+    std::string getLoads(){
+        return this->loads;
+    }
+
     void send(std::string s);
 
     char state_[2550];
     char tmp_state[2550];
     bool is_connected;
+    char loads[2550];
 
 
 private:

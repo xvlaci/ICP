@@ -193,7 +193,7 @@ public:
 
   void loadMap(std::string s);
 
-  void setPlayer(int id, Square * s, bool go);
+  bool setPlayer(int id, Square * s, bool go);
 
   std::string newMap(int id);
 

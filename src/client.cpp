@@ -69,7 +69,11 @@ void client::send(std::string s){
         else if (s == "open")
             message += "COMMAND:::OPEN:::";
         else if (s.find("load") == 0){
-            message += "LOAD:::";
+            message += "LOAD:::BLABOL";
+            new_state = true;
+        }
+        else if (s.find("mapp"))
+            message += "MAPP:::";
             message += s[5];
             message += s.substr(5, s.length()-5);
             new_state = true;
@@ -93,9 +97,13 @@ void client::send(std::string s){
 
         if(new_state){
             boost::asio::read(this->socket(), boost::asio::buffer(tmp_state, 2550));
-            if(tmp_state[0] != 'D')
+            if(tmp_state[0] != 'D' && tmp_state[0] != 'L')
                 for(int i=0; i<2550; i++)
                     state_[i] = tmp_state[i];
+            else if (tmp_state[0] == 'L'){
+                for(int i=0; i<2550; i++)
+                    loads[i] = tmp_state[i];
+            }
         }
         else{
             char reply[2550];

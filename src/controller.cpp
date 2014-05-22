@@ -23,7 +23,7 @@ Square * Controller::move(Square * s)
 
     int x = s->getX();
     int y = s->getY();
-
+    s->getCharacter()->alive = true;
     this->newCoords(x, y, s->getCharacter()->facing());
 
     Square * new_s = this->b->getSquare(x,y);
@@ -132,6 +132,10 @@ void Controller::moveGuard()
                     new_s->setObjectType(GUARD);
                     this->b->guards_pos[i]->clearSquare();
                     this->b->guards_pos[i] = new_s;
+                    if(new_s->getObjectType() == PLAYER){
+                        new_s->getCharacter()->living = false;
+
+                    }
                 }
             }
             else if(rn < 80){
