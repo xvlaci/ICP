@@ -13,6 +13,7 @@ ConnectDialog::ConnectDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setWindowTitle("Connect");
 }
 
 ConnectDialog::~ConnectDialog()

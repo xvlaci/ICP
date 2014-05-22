@@ -6,6 +6,7 @@ SelectMapDialog::SelectMapDialog(QWidget *parent) :
     ui(new Ui::SelectMapDialog)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Map selection");
 }
 
 SelectMapDialog::~SelectMapDialog()

@@ -92,10 +92,9 @@ void ClientWindow::repaint(std::string board_state)
                 scene->addLine(x+12,y+18,x+14,y+18,QPen(Qt::darkYellow));
                 scene->addLine(x+12,y+20,x+15,y+20,QPen(Qt::darkYellow));
                 break;
-            case '4':
-            {
-
-            }
+            case '4':  /* draw finish */
+                scene->addRect(x+5,y+5,15,15,QPen(Qt::green),QBrush(Qt::green));
+                break;
             case 'a': /* guard looking up */
             {
                 QPolygon polygon;
