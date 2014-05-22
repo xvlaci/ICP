@@ -12,11 +12,8 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
-#include <deque>
-#include <boost/thread/thread.hpp>
 
 
-//#include "client_ask.h"
 #include <boost/thread.hpp>
 #include <pthread.h>
 #include <time.h>
@@ -36,37 +33,6 @@ public:
         iterator_ = resolver_.resolve(query_);
         client_init();
         state_[0] = 'q';
-
-        boost::asio::async_connect(socket_, iterator_,
-            boost::bind(&client::handle_connect, this,
-              boost::asio::placeholders::error));
-
-    }
-
-    void handle_connect(const boost::system::error_code& error)
-    {
-      if (!error)
-      {
-          std::cout << "blaaaaaa" << std::endl;
-
-          boost::asio::async_read(socket_,
-            boost::asio::buffer(msg_t, 2550),
-            boost::bind(&client::handle_read_header, this,
-              boost::asio::placeholders::error));
-      }
-    }
-
-    void handle_read_header(const boost::system::error_code& error)
-    {
-      if (!error)
-      {
-          std::cout << "bleeeeee" << std::endl;
-
-        boost::asio::async_read(socket_,
-            boost::asio::buffer(msg_t, 2550),
-            boost::bind(&client::handle_read_header, this,
-              boost::asio::placeholders::error));
-      }
     }
 
     void client_connect();
@@ -81,7 +47,7 @@ public:
     }
 
     void send(std::string s);
-    char msg_t[2550];
+
     char state_[2550];
     char tmp_state[2550];
 private:
