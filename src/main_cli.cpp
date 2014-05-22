@@ -49,22 +49,26 @@ void repaintBoard(std::string board_state)
         std::cout << "Error: input string was not valid" << std::endl;
     }
 
+    char symbols[14];
+    strcpy(symbols, " #Oq^>v<ADUC");
+
     char c;
-    for (int y = 0; y < height*20; y+=20)
+    for(int y = 0; y < height; y++)
     {
-        for (int x = 0; x < width*20; x+=20)
-        {
+        for(int x = 0; x < width; x++){
             c = stream.get();
-            if ( c == 10 )
-            {
-                c = stream.get();
+            if(c >= 'a' && c <= 'd'){
+                std::cout << symbols[(c - 'a' + 4)];
             }
-
-            switch (c)
-            {
-
+            else if(c > 'd'){
+                std::cout << symbols[((c-'e')%4) + 4]
+            }
+            else{
+                std::cout << symbols[c - '0'];
             }
         }
+        c = stream.get();
+        std::cout << std::endl;
     }
 }
 
