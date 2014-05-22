@@ -307,34 +307,36 @@ void ClientWindow::start_connection()
             this,
             tr("Vyber mapy"),
             tr("Connected. Tady by mel byt vyber mapy.") );*/
+
         my_client->send("load");
-        if(my_client->getLoads()[0] != 'q'){
 
-        SelectMapDialog sDialog;
-        sDialog.setModal(true);
-        sDialog.fillMapDialog(my_client->getLoads());
-        sDialog.exec();
+        if(my_client->getLoads()[0] != 'q')
+        {
+            SelectMapDialog sDialog;
+            sDialog.setModal(true);
+            sDialog.fillMapDialog(my_client->getLoads());
+            sDialog.exec();
 
-        std::string tempmap = sDialog.getMap();
-        std::string temptime = sDialog.getTime();
-        if(temptime.length() != 1)
-            temptime = "3";
-        if((temptime[0] - '0') < 2 || (temptime[0] - '0') > 8)
-            temptime = "3";
-        std::string tmps = "mapp ";
-        tmps += temptime;
-        tmps += " ";
-        tmps += tempmap;
+            std::string tempmap = sDialog.getMap();
+            std::string temptime = sDialog.getTime();
+            if(temptime.length() != 1)
+                temptime = "3";
+            if((temptime[0] - '0') < 2 || (temptime[0] - '0') > 8)
+                temptime = "3";
+            std::string tmps = "mapp ";
+            tmps += temptime;
+            tmps += " ";
+            tmps += tempmap;
 
-        my_client->send(tmps);
+            my_client->send(tmps);
         }
+
         my_client->send("");
+
         if(my_client->state_[0] != 'q')
         {
             repaint(my_client->state_);
         }
-        //std::cout << "Selected map is: " << tempmap << std::endl;
-        //std::cout << "Selected time is: " << temptime << std::endl;
 
     }
     else
