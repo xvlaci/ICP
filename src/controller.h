@@ -11,6 +11,7 @@
 #include <string>
 #include "board.h"
 
+
 using namespace std;
 
 struct maze_map{

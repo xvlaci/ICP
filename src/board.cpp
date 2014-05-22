@@ -4,7 +4,6 @@
 */
 
 #include "board.h"
-
 #include <cstdlib>
 #include <cstring>
 #include <boost/lexical_cast.hpp>
@@ -76,7 +75,6 @@ std::string Board::generateMsg(){
             }
         }
     }
-    std::cout << msg << std::endl;
     return msg;
 }
 

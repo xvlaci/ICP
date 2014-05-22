@@ -14,6 +14,7 @@ Character::Character(bool player, int direction){
     this->color = 0;
 }
 
+
 bool Character::hasKey(){
     return this->key;
 }

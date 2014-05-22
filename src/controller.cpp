@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <cstring>
 
 Controller::Controller(){}
 
@@ -197,12 +198,14 @@ maze_map Controller::load(string filename)
 void Controller::save(string filename)
 {
     using namespace std;
-
+    filename.append(".map");
     ofstream f;
     string msg = b->generateMsg();
+
     f.open(filename.c_str());
     if (f.is_open()) {
         f << msg;
     }
     f.close();
 }
+

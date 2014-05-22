@@ -25,6 +25,7 @@ Square::Square(int x, int y, int object_type)
     }
 }
 
+
 Character * Square::getCharacter()
 {
     return this->character;

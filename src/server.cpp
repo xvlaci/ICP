@@ -139,6 +139,19 @@ void tcp_session::start_write()
             boost::bind(&tcp_session::handle_write, shared_from_this(), _1));
 
     }
+    else if(s[0] == 'L')
+    {
+        std::cout << "posilam ulozene pozice" << std::endl;
+        char *message_reply = new char[2550];
+
+        message_reply[s.size()]=0;
+        message_reply[s.size()+1]=0;
+        memcpy(message_reply,s.c_str(),s.size());
+
+        boost::asio::async_write(socket_,
+            boost::asio::buffer(message_reply,2550),
+            boost::bind(&tcp_session::handle_write, shared_from_this(), _1));
+    }
     else{
         char *message_reply = new char[2550];
 
@@ -173,12 +186,28 @@ std::string tcp_session::clientMsgHandler()
             s = "-Plno";
         }
     }
-    else if(msg.find(":::LOAD:::") == 1 && (msg[0] - '0') == 0){
-        server::getInstance()->waitin_time_ = msg[11] - '0';
+
+    else if(msg.find(":::LOAD") == 1 && (msg[0] - '0') == 0){
+        /*server::getInstance()->waitin_time_ = msg[11] - '0';
         //std::cout << "|" << msg[11] - '0' << "|" << msg.substr(14, msg.length()-15) << "|" << std::endl;
         server::getInstance()->loadMap(msg.substr(14, msg.length()-15));
         server::getInstance()->want_new_state = true;
         return server::getInstance()->getBoard()->generateMsg();
+        */
+
+        //cout << "bla" << endl;
+        s = "Loads";
+        string tmp;
+        glob_t glob_result;
+        glob("*",GLOB_TILDE,NULL,&glob_result);
+        for(unsigned int i=0; i<glob_result.gl_pathc; ++i){
+            tmp = glob_result.gl_pathv[i];;
+            if(tmp.find(".map") == (tmp.length() - 4)){
+                s.append("\n");
+                s.append(tmp);
+            }
+        }
+        cout << s << endl;
     }
     else if(msg.find(":::SAVE:::") == 1){
         Controller* c = server::getInstance()->getCont();
@@ -250,10 +279,9 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
         server::getInstance()->setPlayer(player.id, cont->openGate(player.position), false);
     }
     else{}
-
-
-
 }
+
+
 
 void tcp_session::handle_write(const boost::system::error_code& ec)
 {
@@ -354,11 +382,10 @@ Board * server::getBoard()
 void server::loadMap(std::string s)
 {
     using namespace boost;
-
+    s.append(".map");
     srand(time(NULL));
 
     this->m_pInstance->cont = new Controller();
-
     maze_map maze = cont->load(s);
 
 
@@ -420,3 +447,5 @@ void server::setPlayer(int id, Square * s, bool go)
     this->m_pInstance->PLAYERS[id].go = go;
     this->m_pInstance->PLAYERS[id].turn = true;
 }
+
+

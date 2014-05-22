@@ -28,6 +28,7 @@ public:
     int getWidth();
     int getHeight();
     Square * getSquare(int x, int y);
+
     std::string generateMsg();
     void printMap();
 

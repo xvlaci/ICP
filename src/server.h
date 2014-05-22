@@ -6,12 +6,14 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+
 #include <algorithm>
 #include <cstdlib>
 #include <deque>
 #include <sstream>
 #include <iostream>
 #include <set>
+#include <glob.h>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
