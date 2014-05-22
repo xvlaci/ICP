@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     serverwindow.cpp \
     clientwindow.cpp \
     connectdialog.cpp \
-    controller.cpp
+    controller.cpp \
+    selectmapdialog.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -35,12 +36,14 @@ HEADERS  += mainwindow.h \
     clientwindow.h \
     connectdialog.h \
     controller.h \
-    client_ask.h
+    client_ask.h \
+    selectmapdialog.h
 
 FORMS    += mainwindow.ui\
     serverwindow.ui \
     clientwindow.ui \
-    connectdialog.ui
+    connectdialog.ui \
+    selectmapdialog.ui
 
 LIBS    += -lboost_system \
            -lboost_thread-mt \

@@ -87,6 +87,12 @@ private slots:
 
 
     void on_disconnectButton_clicked();
+
+
+signals:
+    void sendmaps(std::string m);
+
+
 };
 
 #endif // CLIENTWINDOW_H

@@ -8,6 +8,7 @@
 #include "ui_clientwindow.h"
 
 #include "connectdialog.h"
+#include "selectmapdialog.h"
 
 #include <iostream>
 #include <fstream>
@@ -313,13 +314,17 @@ void ClientWindow::start_connection()
         ui->disconnectButton->setDisabled(false);
         ui->lineEdit->setDisabled(false);
 
-        QMessageBox::information(
+        /*QMessageBox::information(
             this,
             tr("Vyber mapy"),
-            tr("Connected. Tady by mel byt vyber mapy.") );
+            tr("Connected. Tady by mel byt vyber mapy.") );*/
 
+        my_client->send("load");
 
-
+        SelectMapDialog sDialog;
+        sDialog.setModal(true);
+        sDialog.fillMapDialog(my_client->getLoads());
+        sDialog.exec();
 
     }
     else
