@@ -402,7 +402,7 @@ void server::move()
         this->m_pInstance->PLAYERS[i].turn = false;
         this->m_pInstance->PLAYERS[i].waitin = true;
     }
-    this->m_pInstance->b->printMap();
+    //this->m_pInstance->b->printMap();
 
     this->m_pInstance->map_new_state = this->m_pInstance->b->generateMsg();
     this->m_pInstance->cont->moveGuard();

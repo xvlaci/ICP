@@ -34,7 +34,8 @@ HEADERS  += mainwindow.h \
     serverwindow.h \
     clientwindow.h \
     connectdialog.h \
-    controller.h
+    controller.h \
+    client_ask.h
 
 FORMS    += mainwindow.ui\
     serverwindow.ui \
@@ -42,4 +43,5 @@ FORMS    += mainwindow.ui\
     connectdialog.ui
 
 LIBS    += -lboost_system \
+           -lboost_thread-mt \
            -pthread

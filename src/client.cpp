@@ -88,6 +88,7 @@ void client::send(std::string s){
         using namespace std;
 
         boost::asio::write(this->socket(), boost::asio::buffer(message, message.size()));
+     /*
         if(new_state){
             boost::asio::read(this->socket(), boost::asio::buffer(tmp_state, 2550));
             if(tmp_state[0] != 'D')
@@ -99,11 +100,10 @@ void client::send(std::string s){
             boost::asio::read(this->socket(),
                 boost::asio::buffer(reply, 2550));
         }
+    */
       }
       catch (std::exception& e)
       {
         std::cerr << "Exception: " << e.what() << "\n";
       }
-
-
 }
