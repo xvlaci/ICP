@@ -18,6 +18,7 @@ ServerWindow::ServerWindow(QWidget *parent) :
     server_thread->name = "bludiste2014-server";
     server_thread->start();
     ui->textBrowser->append("Server started on port 2345");
+    this->setWindowTitle("Bludiste2014 Server");
 
 }
 

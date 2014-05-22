@@ -19,6 +19,8 @@ ClientWindow::ClientWindow(QWidget *parent) :
     ui(new Ui::ClientWindow)
 {
     ui->setupUi(this);
+    this->showMaximized();
+    this->setWindowTitle("Bludiste2014 Client");
     ui->disconnectButton->setDisabled(true);
     ui->lineEdit->setDisabled(true);
 
@@ -360,8 +362,6 @@ void ClientWindow::on_connectButton_clicked()
 
 void ClientWindow::on_disconnectButton_clicked()
 {
-    /* a zrusit klienta asik */
-
     scene->clear();
     ui->disconnectButton->setDisabled(true);
     ui->lineEdit->setDisabled(true);

@@ -51,8 +51,7 @@ public:
 
     char state_[2550];
     char tmp_state[2550];
-
-        bool is_connected;
+    bool is_connected;
 
 
 private:
