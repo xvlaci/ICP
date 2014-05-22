@@ -295,18 +295,6 @@ void ClientWindow::repaint(std::string board_state)
 
 void ClientWindow::start_connection()
 {
-
-
-    me = this;
-
-    void *i;
-    int rc = pthread_create(&this->thread, NULL, ClientWindow::JHWrapper, static_cast<void *>(i));
-
-    if (rc){
-        std::cout << "Error:unable to create thread," << rc << std::endl;
-        exit(-1);
-    }
-
     my_client = new client(io_service, server, port);
 
     if (my_client->is_connected == true)
@@ -319,8 +307,8 @@ void ClientWindow::start_connection()
             this,
             tr("Vyber mapy"),
             tr("Connected. Tady by mel byt vyber mapy.") );*/
-
         my_client->send("load");
+        if(my_client->getLoads()[0] != 'q'){
 
         SelectMapDialog sDialog;
         sDialog.setModal(true);
@@ -339,7 +327,8 @@ void ClientWindow::start_connection()
         tmps += tempmap;
 
         my_client->send(tmps);
-
+        }
+        my_client->send("");
         if(my_client->state_[0] != 'q')
         {
             repaint(my_client->state_);
