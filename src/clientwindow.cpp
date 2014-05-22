@@ -311,6 +311,7 @@ void ClientWindow::start_connection()
 
     if (my_client->is_connected == true)
     {
+        ui->connectButton->setDisabled(true);
         ui->disconnectButton->setDisabled(false);
         ui->lineEdit->setDisabled(false);
 
@@ -328,12 +329,16 @@ void ClientWindow::start_connection()
 
         std::string tempmap = sDialog.getMap();
         std::string temptime = sDialog.getTime();
-        std::string tmp = "mapp ";
-        tmp += temptime;
-        tmp += " ";
-        tmp += tempmap;
+        if(temptime.length() != 1)
+            temptime = "3";
+        if((temptime[0] - '0') < 2 || (temptime[0] - '0') > 8)
+            temptime = "3";
+        std::string tmps = "mapp ";
+        tmps += temptime;
+        tmps += " ";
+        tmps += tempmap;
 
-        my_client->send(tmp);
+        my_client->send(tmps);
 
         if(my_client->state_[0] != 'q')
         {
