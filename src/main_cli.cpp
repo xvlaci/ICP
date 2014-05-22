@@ -50,7 +50,7 @@ void repaintBoard(std::string board_state)
     }
 
     char symbols[14];
-    strcpy(symbols, " #Oq^>v<ADUC");
+    strcpy(symbols, " #Oq@^>v<ADUC");
 
     char c;
     for(int y = 0; y < height; y++)
@@ -62,10 +62,10 @@ void repaintBoard(std::string board_state)
 
 
             if(c >= 'a' && c <= 'd'){
-                std::cout << symbols[(c - 'a' + 4)];
+                std::cout << symbols[(c - 'a') + 5];
             }
             else if(c > 'd'){
-                std::cout << symbols[((c-'e')%4) + 8];
+                std::cout << symbols[((c-'e')%4) + 9];
             }
             else{
                 std::cout << symbols[c - '0'];

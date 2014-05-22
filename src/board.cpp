@@ -13,15 +13,15 @@ Board::Board(int width, int height, std::string map)
     this->width = width;
     this->height = height;
     this->map = map;
-    strcpy(this->symbols, " #Oq^A>DvU<C");
+    strcpy(this->symbols, " #Oq^A>DvU<C@");
 
     if((this->board = ( Square*** )malloc( width*sizeof( Square** ))) == 0){
-        std::cout << "shit";
+        std::cerr << "Chyba";
     }
 
     for (int i = 0; i < width; i++ ){
         if (( this->board[i] = ( Square** )malloc( height*sizeof(Square*))) == NULL ){
-            std::cout << "shit";
+            std::cerr << "Chyba";
         }
     }
     loadMap();
@@ -84,6 +84,9 @@ void Board::printMap(){
         for(int x = 0; x < this->width; x++){
             if(board[x][y]->getObjectType() >= GUARD){
                 std::cout << symbols[board[x][y]->getObjectType() + (2*board[x][y]->getCharacter()->facing())];
+            }
+            else if(board[x][y]->getObjectType() == FINISH){
+                std::cout << symbols[12];
             }
             else{
                 std::cout << symbols[board[x][y]->getObjectType()];

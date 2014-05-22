@@ -14,6 +14,7 @@ enum {
     WALL,
     GATE,
     KEY,
+    FINISH,
     GUARD,
     PLAYER
 };
