@@ -186,16 +186,15 @@ std::string tcp_session::clientMsgHandler()
             s = "-Plno";
         }
     }
-
-    else if(msg.find(":::LOAD") == 1 && (msg[0] - '0') == 0){
-        /*server::getInstance()->waitin_time_ = msg[11] - '0';
-        //std::cout << "|" << msg[11] - '0' << "|" << msg.substr(14, msg.length()-15) << "|" << std::endl;
+    else if (msg.find(":::MAPP:::") == 1 && (msg[0] - '0') == 0){
+        std::cout << "jsem tady??" << std::endl;
+        server::getInstance()->waitin_time_ = msg[11] - '0';
         server::getInstance()->loadMap(msg.substr(14, msg.length()-15));
         server::getInstance()->want_new_state = true;
         return server::getInstance()->getBoard()->generateMsg();
-        */
+    }
 
-        //cout << "bla" << endl;
+    else if(msg.find(":::LOAD") == 1 && (msg[0] - '0') == 0){
         s = "Loads";
         string tmp;
         glob_t glob_result;
@@ -221,7 +220,10 @@ std::string tcp_session::clientMsgHandler()
             if(id_cl >= 0 && id_cl <= 3){
                 if(msg.find(":::COMMAND:::") == 1){
 
-                    clientCommandHandler(server::getInstance()->getPlayer(id_cl), msg);
+                    if(!clientCommandHandler(server::getInstance()->getPlayer(id_cl), msg));
+                    server::getInstance()->want_new_state = true;
+                    return "DEAD";
+
                 }
                 if(msg.find(":::NEWSTATE:::") == 1){
                     if(server::getInstance()->getPlayer(id_cl).waitin){
@@ -238,14 +240,14 @@ std::string tcp_session::clientMsgHandler()
     return s;
 }
 
-void tcp_session::clientCommandHandler(Player player, std::string command){
+bool tcp_session::clientCommandHandler(Player player, std::string command){
     bool alive;
 
     Controller * cont = server::getInstance()->getCont();
     Board * b = server::getInstance()->getBoard();
 
     if(player.turn)
-        return;
+        return true;
 
     if(command.find(":::GO:::") == 11){
         //std::cout << "Jdu dopredu!!" << std::endl;
@@ -279,7 +281,8 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
         //std::cout << "Oteviram branu" << std::endl;
         alive = server::getInstance()->setPlayer(player.id, cont->openGate(player.position), false);
     }
-    else{}
+
+    return alive;
 }
 
 
