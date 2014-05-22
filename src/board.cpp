@@ -37,8 +37,10 @@ void Board::loadMap()
         for(int x = 0; x < width; x++){
             this->board[x][y] = new Square(x,y,((int)*ch) - '0');
             //std::cout << board[i][j]->getX() << "x" << board[i][j]->getY() << " - " << board[i][j]->getObjectType() << std::endl;
-            if((int)*ch >= 'e' && (int)*ch <= 'h'){
+            if((int)*ch >= 'e' && (int)*ch <= 't'){
+                //this->board[x][y]->getCharacter()->setColor(players);
                 this->player_start_pos[players++] = this->board[x][y];
+
             }
 
             if((int)*ch >= 'a' && (int)*ch <= 'd'){
@@ -63,7 +65,8 @@ std::string Board::generateMsg(){
             s = this->board[x][y];
             if(s->getObjectType() >= GUARD){
                 //Guard pozice a, b, c, d ... Player pozice e, f, g, h
-                char sym = (s->getObjectType() - 4) * 4 + 'a' + s->getCharacter()->facing();
+                char sym = (s->getObjectType() - 4) * 4 + 'a' + s->getCharacter()->facing() + (4 * s->getCharacter()->getColor());
+
                 msg.push_back(sym);
             }
             else
@@ -73,6 +76,7 @@ std::string Board::generateMsg(){
             }
         }
     }
+    std::cout << msg << std::endl;
     return msg;
 }
 

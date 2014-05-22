@@ -19,13 +19,15 @@ private:
     bool key;
     bool player;
     int direction;
+    int color;
 public:
     Character(bool player, int direction);
     ~Character();
     bool hasKey();
     void useKey();
     void pickUpKey();
-
+    int getColor();
+    void setColor(int color);
     bool isPlayer();
     void turn(int side);
     int facing();
