@@ -57,17 +57,20 @@ void repaintBoard(std::string board_state)
     {
         for(int x = 0; x < width; x++){
             c = stream.get();
+            if (c == 10)
+                c = stream.get();
+
+
             if(c >= 'a' && c <= 'd'){
                 std::cout << symbols[(c - 'a' + 4)];
             }
             else if(c > 'd'){
-                std::cout << symbols[((c-'e')%4) + 4]
+                std::cout << symbols[((c-'e')%4) + 8];
             }
             else{
                 std::cout << symbols[c - '0'];
             }
         }
-        c = stream.get();
         std::cout << std::endl;
     }
 }
