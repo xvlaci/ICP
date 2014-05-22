@@ -269,15 +269,15 @@ void tcp_session::clientCommandHandler(Player player, std::string command){
     }
     else if(command.find(":::UP:::") == 11){
         //std::cout << "Otacim se nahoru!!" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->turn(player.position, UP), player.go);
+        alive = server::getInstance()->setPlayer(player.id, cont->turn(player.position, UP), player.go);
     }
     else if(command.find(":::PICK:::") == 11){
         //std::cout << "Zvedam klic" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->pickUpKey(player.position), false);
+        alive = server::getInstance()->setPlayer(player.id, cont->pickUpKey(player.position), false);
     }
     else if(command.find(":::OPEN:::") == 11){
         //std::cout << "Oteviram branu" << std::endl;
-        server::getInstance()->setPlayer(player.id, cont->openGate(player.position), false);
+        alive = server::getInstance()->setPlayer(player.id, cont->openGate(player.position), false);
     }
     else{}
 }
@@ -423,9 +423,10 @@ std::string server::newMap(int id)
 
 void server::move()
 {
+    bool alive;
     for(int i = 0; i < 4; i++){
         if(!this->m_pInstance->PLAYERS[i].turn && this->m_pInstance->PLAYERS[i].go){
-            this->m_pInstance->setPlayer(i, this->m_pInstance->cont->move(this->m_pInstance->PLAYERS[i].position), true);
+            alive = this->m_pInstance->setPlayer(i, this->m_pInstance->cont->move(this->m_pInstance->PLAYERS[i].position), true);
         }
         this->m_pInstance->PLAYERS[i].turn = false;
         this->m_pInstance->PLAYERS[i].waitin = true;

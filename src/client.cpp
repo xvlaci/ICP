@@ -72,7 +72,7 @@ void client::send(std::string s){
             message += "LOAD:::BLABOL";
             new_state = true;
         }
-        else if (s.find("mapp"))
+        else if (s.find("mapp")){
             message += "MAPP:::";
             message += s[5];
             message += s.substr(5, s.length()-5);

@@ -32,6 +32,7 @@ public:
     void turn(int side);
     int facing();
 
+    bool living;
     bool alive;
 };
 
