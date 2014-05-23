@@ -335,7 +335,15 @@ void ClientWindow::start_connection()
 
         my_client->send("");
 
-        if(my_client->state_[0] != 'q')
+        if(my_client->state_[0] == 'D')
+        {
+            std::cout << "You are Dead" << std::endl;
+        }
+        else if(my_client->state_[0] == 'F')
+        {
+            std::cout << "HRA DOKONCENA" << std::endl;
+        }
+        else if(my_client->state_[0] != 'q')
         {
             repaint(my_client->state_);
         }
@@ -365,7 +373,16 @@ void ClientWindow::returnPressed()
     if(request == "load"){
         std::cout << my_client->getLoads() << std::endl;
     }
-    if(my_client->state_[0] != 'q')
+
+    if(my_client->state_[0] == 'D')
+    {
+        std::cout << "You are Dead" << std::endl;
+    }
+    else if(my_client->state_[0] == 'F')
+    {
+        std::cout << "HRA DOKONCENA" << std::endl;
+    }
+    else if(my_client->state_[0] != 'q')
     {
         repaint(my_client->state_);
     }

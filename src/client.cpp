@@ -52,8 +52,10 @@ void client::send(std::string s){
         std::string message;
         message += client_id;
         message += ":::";
-        if(s == "go")
+        if(s == "go"){
             message += "COMMAND:::GO:::";
+            new_state = true;
+        }
         else if (s == "stop")
             message += "COMMAND:::STOP:::";
         else if (s == "left")
@@ -98,7 +100,7 @@ void client::send(std::string s){
 
         if(new_state){
             boost::asio::read(this->socket(), boost::asio::buffer(tmp_state, 2550));
-            if(tmp_state[0] != 'D' && tmp_state[0] != 'L')
+            if(tmp_state[0] != 'L' && tmp_state[0] != 'R' && (tmp_state[0] >= '0' && tmp_state[0] <= 'z'))
                 for(int i=0; i<2550; i++)
                     state_[i] = tmp_state[i];
             else if (tmp_state[0] == 'L'){

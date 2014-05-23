@@ -126,10 +126,19 @@ void tcp_session::start_write()
 {
     output_deadline_.expires_from_now(boost::posix_time::seconds(30));
 
-    std::string s = clientMsgHandler();
+    std::string s;
+
+    if(server::getInstance()->_finished)
+        s = "FINISHED";
+    else
+        s = clientMsgHandler();
+
+    if(server::getInstance()->_finished)
+        s = "FINISHED";
 
     if(server::getInstance()->want_new_state){
-        server::getInstance()->want_new_state = false;
+        if(!server::getInstance()->_finished)
+            server::getInstance()->want_new_state = false;
         char *message_reply = new char[2550];
         message_reply[s.size()]=0;
         message_reply[s.size()+1]=0;
@@ -218,11 +227,29 @@ std::string tcp_session::clientMsgHandler()
         if(id_end == 1){
             id_cl = msg[0] - '0';
             if(id_cl >= 0 && id_cl <= 3){
+                if(server::getInstance()->PLAYERS[id_cl].position == 0){
+                    server::getInstance()->want_new_state = true;
+                    server::getInstance()->PLAYERS[id_cl].waitin = true;
+                    return "DEAD";
+                }
+
                 if(msg.find(":::COMMAND:::") == 1){
 
-                    if(!clientCommandHandler(server::getInstance()->getPlayer(id_cl), msg));
-                    server::getInstance()->want_new_state = true;
-                    return "DEAD";
+                    if(!clientCommandHandler(server::getInstance()->getPlayer(id_cl), msg)){
+                        server::getInstance()->want_new_state = true;
+                        server::getInstance()->PLAYERS[id_cl].waitin = true;
+                        if(server::getInstance()->_finished)
+                        {
+                            server::getInstance()->PLAYERS[0].waitin = true;
+                            server::getInstance()->PLAYERS[1].waitin = true;
+                            server::getInstance()->PLAYERS[2].waitin = true;
+                            server::getInstance()->PLAYERS[3].waitin = true;
+                            return "FINISHED";
+
+                        }
+                        //server::getInstance()->want_new_state = true;
+                        return "DEAD";
+                    }
 
                 }
                 if(msg.find(":::NEWSTATE:::") == 1){
@@ -231,7 +258,7 @@ std::string tcp_session::clientMsgHandler()
                         //return "Nova mapa";
                     }
                     else
-                        return "DENIED";
+                        return "REJECTED";
                 }
             }
         }
@@ -365,7 +392,7 @@ Player server::getPlayer(int id)
 
 void * server::stepper(void *threadid)
 {
-    while(true){
+    while(!server::getInstance()->_finished){
         sleep(server::getInstance()->waitin_time_);
         this->m_pInstance->move();
     }
@@ -421,7 +448,7 @@ std::string server::newMap(int id)
         return this->m_pInstance->map_new_state;
     }
 
-    return "DENIED";
+    return "REJECTED";
 }
 
 void server::move()
@@ -447,6 +474,8 @@ bool server::setPlayer(int id, Square * s, bool go)
     this->m_pInstance->PLAYERS[id].position = s;
     if(s == 0)
         return (this->m_pInstance->PLAYERS[id].alive = false);
+    else if (s->getObjectType() == FINISH)
+        return !(server::getInstance()->_finished = true);
     else
         this->m_pInstance->PLAYERS[id].alive = true;
     this->m_pInstance->PLAYERS[id].go = go;

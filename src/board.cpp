@@ -64,7 +64,7 @@ std::string Board::generateMsg(){
             s = this->board[x][y];
             if(s->getObjectType() >= GUARD){
                 //Guard pozice a, b, c, d ... Player pozice e, f, g, h
-                char sym = (s->getObjectType() - 4) * 4 + 'a' + s->getCharacter()->facing() + (4 * s->getCharacter()->getColor());
+                char sym = (s->getObjectType() - GUARD) * 4 + 'a' + s->getCharacter()->facing() + (4 * s->getCharacter()->getColor());
 
                 msg.push_back(sym);
             }

@@ -93,14 +93,14 @@ public:
     // the output queue is empty. This ensures that the output actor stays
     // asleep until a message is put into the queue.
     non_empty_output_queue_.expires_at(boost::posix_time::pos_infin);
+
   }
 
   tcp::socket& socket();
 
   // Called by the server object to initiate the four actors.
   void start();
-  int client_cnt;
-
+  int client_cnt; 
 private:
   void stop();
 
@@ -200,7 +200,8 @@ public:
   int waitin_time_;
   bool want_new_state;
   bool map_loaded;
-
+  bool _finished;
+  Player PLAYERS[4];
 private:
   server(boost::asio::io_service& io_service,
       const tcp::endpoint& listen_endpoint)
@@ -210,6 +211,7 @@ private:
     /*subscriber_ptr bc(new udp_broadcaster(io_service_, broadcast_endpoint));
     channel_.join(bc);
     */
+    this->_finished = false;
     this->clients_cnt = 0;
     this->map_loaded;
 
@@ -228,7 +230,7 @@ private:
 
 
   pthread_t thread;
-  Player PLAYERS[4];
+
   Controller * cont;
   Board * b;
   std::string map_new_state;

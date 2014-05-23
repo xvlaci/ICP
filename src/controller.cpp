@@ -41,6 +41,10 @@ Square * Controller::move(Square * s)
         s->clearSquare();
         return 0;
     }
+    else if(new_s->getObjectType() == FINISH)
+    {
+        return new_s;
+    }
     else{
         return s;
     }
