@@ -13,7 +13,6 @@
 class Board{
 private:
     void loadMap();
-
     int width;
     int height;
     std::string map;
@@ -30,7 +29,7 @@ public:
     void printMap();
 
     Square * player_start_pos[4];
-    Square * guards_pos[15];
+    Square * guards_pos[20];
     int guards;
 };
 
