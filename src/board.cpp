@@ -8,6 +8,7 @@
 #include <cstring>
 #include <boost/lexical_cast.hpp>
 
+
 Board::Board(int width, int height, std::string map)
 {
     this->width = width;

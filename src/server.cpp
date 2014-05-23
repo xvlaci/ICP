@@ -207,7 +207,7 @@ std::string tcp_session::clientMsgHandler()
         s = "Loads";
         string tmp;
         glob_t glob_result;
-        glob("*",GLOB_TILDE,NULL,&glob_result);
+        glob("examples/*",GLOB_TILDE,NULL,&glob_result);
         for(unsigned int i=0; i<glob_result.gl_pathc; ++i){
             tmp = glob_result.gl_pathv[i];;
             if(tmp.find(".map") == (tmp.length() - 4)){

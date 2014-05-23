@@ -6,12 +6,9 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-
 #include <iostream>
 #include <string>
 #include "square.h"
-
-
 
 class Board{
 private:
