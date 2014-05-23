@@ -138,7 +138,6 @@ void Controller::moveGuard()
                     this->b->guards_pos[i] = new_s;
                     if(new_s->getObjectType() == PLAYER){
                         new_s->getCharacter()->living = false;
-
                     }
                 }
             }

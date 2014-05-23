@@ -455,7 +455,7 @@ void server::move()
 {
     bool alive;
     for(int i = 0; i < 4; i++){
-        if(!this->m_pInstance->PLAYERS[i].turn && this->m_pInstance->PLAYERS[i].go){
+        if(!this->m_pInstance->PLAYERS[i].turn && this->m_pInstance->PLAYERS[i].go && this->m_pInstance->PLAYERS[i].position != 0){
             alive = this->m_pInstance->setPlayer(i, this->m_pInstance->cont->move(this->m_pInstance->PLAYERS[i].position), true);
         }
         this->m_pInstance->PLAYERS[i].turn = false;
