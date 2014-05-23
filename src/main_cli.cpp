@@ -166,6 +166,7 @@ int main(int argc, char *argv[])
 
         my_client->send(settings);
 
+        my_client->send("");
         repaintBoard(my_client->getState());
 
         while (getline(std::cin, choice))
