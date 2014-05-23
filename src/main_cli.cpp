@@ -166,11 +166,32 @@ int main(int argc, char *argv[])
 
         my_client->send(settings);
 
+        repaintBoard(my_client->getState());
+
         while (getline(std::cin, choice))
         {
             my_client->send(choice);
             if (choice == "")
-                repaintBoard(my_client->getState());
+            {
+
+
+                if(my_client->state_[0] == 'D')
+                {
+                    std::cout << std::endl << "You have died." << std::endl;
+                    return 0;
+                }
+                else if(my_client->state_[0] == 'F')
+                {
+                    std::cout << std::endl << "Game ended. Someone reached finish." << std::endl;
+                }
+                else if(my_client->state_[0] != 'q')
+                {
+                    repaintBoard(my_client->getState());
+                }
+
+            }
+
+
         }
 
     }

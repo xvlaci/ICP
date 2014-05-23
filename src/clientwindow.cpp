@@ -337,11 +337,19 @@ void ClientWindow::start_connection()
 
         if(my_client->state_[0] == 'D')
         {
-            std::cout << "You are Dead" << std::endl;
+            QMessageBox::information(
+                this,
+                tr("You are dead."),
+                tr("You are dead.") );
+                scene->clear();
         }
         else if(my_client->state_[0] == 'F')
         {
-            std::cout << "HRA DOKONCENA" << std::endl;
+            QMessageBox::information(
+                this,
+                tr("Game ended."),
+                tr("Someone reached finish.") );
+                scene->clear();
         }
         else if(my_client->state_[0] != 'q')
         {
@@ -376,11 +384,19 @@ void ClientWindow::returnPressed()
 
     if(my_client->state_[0] == 'D')
     {
-        std::cout << "You are Dead" << std::endl;
+        QMessageBox::information(
+            this,
+            tr("You are dead."),
+            tr("You are dead.") );
+            scene->clear();
     }
     else if(my_client->state_[0] == 'F')
     {
-        std::cout << "HRA DOKONCENA" << std::endl;
+        QMessageBox::information(
+            this,
+            tr("Game ended."),
+            tr("Someone reached finish.") );
+            scene->clear();
     }
     else if(my_client->state_[0] != 'q')
     {
