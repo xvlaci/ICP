@@ -83,7 +83,7 @@ void Board::printMap(){
     {
         for(int x = 0; x < this->width; x++){
             if(board[x][y]->getObjectType() >= GUARD){
-                std::cout << symbols[board[x][y]->getObjectType() + (2*board[x][y]->getCharacter()->facing())];
+                std::cout << symbols[(board[x][y]->getObjectType() -1) + (2*board[x][y]->getCharacter()->facing())];
             }
             else if(board[x][y]->getObjectType() == FINISH){
                 std::cout << symbols[12];
